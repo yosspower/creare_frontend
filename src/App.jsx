@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import {routes} from "./routes/index.js"
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 
@@ -15,8 +15,11 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/product/:id" element={<ProductDetails />}></Route>
+  {routes.map((route,index)=>(
+ <Route key={index} path={route.path} element={<route.component />}></Route>
+  ))}
+         
+      
       
 
         </Routes>
