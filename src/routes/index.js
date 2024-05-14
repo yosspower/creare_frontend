@@ -10,7 +10,7 @@ export  const routes = [
         component: Home
      },
      {
-        path:"/product/:id",
+        path:"/shop/product/:id",
         component:ProductDetails
      },
      {
@@ -18,7 +18,7 @@ export  const routes = [
         component:Shop
      },
      {
-        path:"contact-us",
+        path:"/contact-us",
         component:Contact
      }
 ]

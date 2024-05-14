@@ -69,7 +69,7 @@ const Header = () => {
 
   Home
   </Link>
-  <Link className={`font-bold text-xl ${location.pathname === "/shop" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
+  <Link className={`font-bold text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
   Shop
   </Link> 
    <Link className={`font-bold text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
