@@ -32,12 +32,14 @@ const menuProps = {
   items,
   onClick: handleMenuClick,
 };
+
 const Header = () => {
-  // header state
+  // Header state
   const [isActive, setIsActive] = useState(false);
   const location = useLocation();
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
+
 
   // event listener
   useEffect(() => {
@@ -49,57 +51,58 @@ const Header = () => {
   return (
     <header
       className={`${
-        isActive ? "bg-white py-6 shadow-md" : "bg-none py-6"
+        isActive ? "bg-[#F2F2F2] py-6 shadow-md" : "bg-none py-6"
       } fixed w-full z-10 lg:px-8 transition-all`}
     >
       <div className="container mx-auto flex items-center justify-between h-full">
+        {/* Logo */}
         <Link to={"/"}>
           <div className="w-[40px]">
-            <img src={Logo} alt="" />
+            <img src={Logo} alt="Logo" />
           </div>
         </Link>
 
         {/* pages */}
-        <div className="flex gap-10">
-          <Link
-            className={`font-bold text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`}
-            to={"/"}
-          >
-            Home
-          </Link>
-          <Link
-            className={`font-bold text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`}
-            to={"/shop"}
-          >
-            Shop
-          </Link>
-          <Link className="font-bold  text-xl" to={"/"}>
-            About
-          </Link>
-          <Link
-            className={`font-bold text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`}
-            to={"contact-us"}
-          >
-            Contact
-          </Link>
+        <div
+         
+          className="flex gap-10"
+        >
+  <Link className={`font-bold text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
+
+  Home
+  </Link>
+  <Link className={`font-bold text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
+  Shop
+  </Link> 
+   <Link className={`font-bold text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
+  Contact
+  </Link>
+  <Link className="font-bold  text-xl" to={"/"}>
+  About us
+  </Link>
         </div>
 
-        {/* profile part  */}
+      {/* profile part  */}
         <div className="flex gap-5">
-          <div
-            onClick={() => setIsOpen(!isOpen)}
-            className="cursor-pointer flex relative"
-          >
-            <BsBag className="text-2xl" />
-            <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
-              {itemAmount}
-            </div>
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          className="cursor-pointer flex relative"
+        >
+          <BsBag className="text-2xl" />
+          <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
+            {itemAmount}
           </div>
-          <Dropdown menu={menuProps} className="">
-            <div className="cursor-pointer flex relative">
-              <IoPersonOutline className="text-2xl" />
-            </div>
-          </Dropdown>
+        </div>
+        <Dropdown menu={menuProps} className="">
+
+              <div
+          className="cursor-pointer flex relative"
+        >
+          <IoPersonOutline  className="text-2xl" />
+        
+     
+        </div>
+    </Dropdown>
         </div>
       </div>
     </header>
