@@ -9,7 +9,7 @@ function Footer() {
       <div className="container mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="flex flex-col items-start">
           <a href="#" className="text-2xl font-bold mb-4">
-            Acme Ecommerce
+            Creare
           </a>
           <p className="text-gray-400 mb-4">High-quality products for your everyday needs.</p>
           <div className="flex space-x-4">
@@ -57,7 +57,7 @@ function Footer() {
         </div>
       </div>
       <div className="container mx-auto px-4 md:px-6 mt-8 text-center text-gray-400">
-        © 2024 Acme Ecommerce. All rights reserved.
+        © 2024 Creare. All rights reserved.
       </div>
     </footer>
   )
