@@ -9,16 +9,17 @@ const Product = ({ product }) => {
   const { addToCart } = useContext(CartContext);
 
   // destructure product
-  const { id, image, category, title, price } = product;
+  const { id, images, name, price, slug, shortDescription } = product;
+
   return (
     <div>
       <div className="border border-[#e4e4e4] h-[300px] mb-4 relative overflow-hidden group transition">
         <div className="w-full h-full flex justify-center items-center">
-          {/* image */}
-          <div className="w-[200px] mx-auto flex justify-center items-center">
+          {/* images */}
+          <div className="flex justify-center items-center">
             <img
-              className="max-h-[160px] group-hover:scale-110 transition duration-300"
-              src={image}
+              className="group-hover:scale-110 transition duration-300 w-full"
+              src={images[0]}
               alt=""
             />
           </div>
@@ -31,7 +32,7 @@ const Product = ({ product }) => {
             </div>
           </button>
           <Link
-            to={`/product/${id}`}
+            to={`/shop/product/${slug}`}
             className="w-12 h-12 bg-white flex justify-center items-center text-primary drop-shadow-xl"
           >
             <BsEyeFill />
@@ -40,12 +41,14 @@ const Product = ({ product }) => {
       </div>
       {/* category, title & price */}
       <div>
-        <div className="tex-sm capitalize text-gray-500 mb-1">{category}</div>
-        <Link to={`/product/${id}`}>
-          <h2 className="font-semibold mb-1">{title}</h2>
+        <div className="tex-sm capitalize text-gray-500 mb-1">{name}</div>
+        <Link to={`/shop/product/${slug}`}>
+          <h2 className="font-semibold mb-1">
+            {shortDescription.substring(0, 30)}...
+          </h2>
         </Link>
 
-        <h2 className="font-semibbold">$ {price}</h2>
+        <h2 className="font-semibbold">${price}</h2>
       </div>
     </div>
   );

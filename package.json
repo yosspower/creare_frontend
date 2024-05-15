@@ -7,19 +7,20 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start": ""
+    "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
     "@reduxjs/toolkit": "^2.2.4",
+    "antd": "^5.17.2",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.6.8",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.23.1",
-    "tailwind": "^4.0.0",
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {

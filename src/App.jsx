@@ -1,13 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-import Home from "./pages/Home";
-import ProductDetails from "./pages/ProductDetails";
+import { routes } from "./routes/index.js";
 
 import Sidebar from "./components/Sidebar.jsx";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
 
 const App = () => {
   return (
@@ -15,13 +12,16 @@ const App = () => {
       <Router>
         <Header />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/product/:id" element={<ProductDetails />}></Route>
-      
-
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<route.component />}
+            ></Route>
+          ))}
         </Routes>
-        <Sidebar /> 
-         <Footer />
+        <Sidebar />
+        <Footer />
       </Router>
     </div>
   );

@@ -16,17 +16,12 @@ const store = configureStore({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-
-
-  <SidebarProvider>
-    <CartProvider>
-      <ProductProvider>
+    <SidebarProvider>
+      <CartProvider>
         <React.StrictMode>
           <App />
         </React.StrictMode>
-      </ProductProvider>
-    </CartProvider>
-  </SidebarProvider>
-  </Provider>
+      </CartProvider>
+    </SidebarProvider>
+  </Provider>,
 );
-
