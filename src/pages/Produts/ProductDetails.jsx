@@ -67,7 +67,7 @@ const ProductDetails = () => {
             </div>
           </div>
           {/* text */}
-          <div className="grid justify-center content-center text-center w-1/2  lg:text-left">
+          <div className="grid  gap-3 text-center w-1/2  lg:text-left">
             <h1 className="text-[26px] font-medium mb-2 max-w-[450px] content-center  lg:mx-0">
               {name}
             </h1>
