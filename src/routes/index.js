@@ -4,6 +4,7 @@ import Home from "../pages/Home"
 import ProductDetails from "../pages/ProductDetails"
 import Contact from "../pages/Contact"
 import Shop from "../pages/Shop"
+import Category from "../pages/category"
 export  const routes = [
      {
         path: '/',
@@ -17,6 +18,10 @@ export  const routes = [
         path:"/shop",
         component:Shop
      },
+     {
+      path:"/category",
+      component:Category
+   },
      {
         path:"/contact-us",
         component:Contact

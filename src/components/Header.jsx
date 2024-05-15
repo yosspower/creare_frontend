@@ -1,28 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "../contexts/SidebarContext";
 import { CartContext } from "../contexts/CartContext";
-import { Link  , useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../img/logo.svg";
 import { BsBag } from "react-icons/bs";
 import { IoPersonOutline } from "react-icons/io5";
-import {Dropdown, message} from 'antd';
-import {UserOutlined } from '@ant-design/icons';
+import { Dropdown, message } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { CiLogout } from "react-icons/ci";
 
 const handleMenuClick = (e) => {
-  message.info('Click on menu item. ');
-  console.log('click', e);
+  message.info("Click on menu item. ");
+  console.log("click", e);
 };
 
-const items= [
+const items = [
   {
-    label: 'Account',
-    key: '1',
+    label: "Account",
+    key: "1",
     icon: <UserOutlined />,
   },
   {
-    label: 'Log Out',
-    key: '2',
+    label: "Log Out",
+    key: "2",
     icon: <CiLogout />,
     danger: true,
     // disabled: true,
@@ -32,15 +32,15 @@ const menuProps = {
   items,
   onClick: handleMenuClick,
 };
+
 const Header = () => {
-  // header state
+  // Header state
   const [isActive, setIsActive] = useState(false);
   const location = useLocation();
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { itemAmount } = useContext(CartContext);
 
-
-  // event listener
+  // Event listener for scroll
   useEffect(() => {
     window.addEventListener("scroll", () => {
       window.scrollY > 60 ? setIsActive(true) : setIsActive(false);
@@ -50,59 +50,74 @@ const Header = () => {
   return (
     <header
       className={`${
-        isActive ? "bg-white py-6 shadow-md" : "bg-none py-6"
+        isActive ? "bg-[#F2F2F2] py-6 shadow-md" : "bg-none py-6"
       } fixed w-full z-10 lg:px-8 transition-all`}
     >
       <div className="container mx-auto flex items-center justify-between h-full">
+        {/* Logo */}
         <Link to={"/"}>
           <div className="w-[40px]">
-            <img src={Logo} alt="" />
+            <img src={Logo} alt="Logo" />
           </div>
         </Link>
 
-        {/* pages */}
-        <div
-         
-          className="flex gap-10"
-        >
-  <Link className={`font-bold text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
-
-  Home
-  </Link>
-  <Link className={`font-bold text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
-  Shop
-  </Link> 
-   <Link className={`font-bold text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
-  Contact
-  </Link>
-  <Link className="font-bold  text-xl" to={"/"}>
-  About us
-  </Link>
+        {/* Navigation Links */}
+        <div className="flex gap-10">
+          <Link
+            className={`font-bold text-xl ${
+              location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"
+            } hover:text-[#00ADB5]`}
+            to={"/"}
+          >
+            Home
+          </Link>
+          <Link
+            className={`font-bold text-xl ${
+              location.pathname.includes("/shop")
+                ? "text-[#00ADB5]"
+                : "text-[#000]"
+            } hover:text-[#00ADB5]`}
+            to={"/shop"}
+          >
+            Shop
+          </Link>
+          <Link className="font-bold text-xl hover:text-[#00ADB5]" to={"/category"}>
+            Categories
+          </Link>
+          <Link
+            className={`font-bold text-xl ${
+              location.pathname === "/contact-us"
+                ? "text-[#00ADB5]"
+                : "text-[#000]"
+            } hover:text-[#00ADB5]`}
+            to={"/contact-us"}
+          >
+            Contact
+          </Link>
+          <Link className="font-bold text-xl hover:text-[#00ADB5]" to={"/"}>
+            About us
+          </Link>
         </div>
 
-      {/* profile part  */}
-        <div className="flex gap-5">
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="cursor-pointer flex relative"
-        >
-          <BsBag className="text-2xl" />
-          <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
-            {itemAmount}
+        {/* Profile Section */}
+        <div className="flex gap-5 items-center">
+          {/* Cart Icon */}
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="cursor-pointer flex relative"
+          >
+            <BsBag className="text-2xl hover:text-[#00ADB5]" />
+            <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
+              {itemAmount}
+            </div>
           </div>
+          {/* Profile Dropdown */}
+          <Dropdown menu={menuProps} className="">
+            <div className="cursor-pointer flex relative">
+              <IoPersonOutline className="text-2xl hover:text-[#00ADB5]" />
+            </div>
+          </Dropdown>
         </div>
-        <Dropdown menu={menuProps} className="">
-
-              <div
-          className="cursor-pointer flex relative"
-        >
-          <IoPersonOutline  className="text-2xl" />
-        
-     
-        </div>
-    </Dropdown>
-        </div>
-    
       </div>
     </header>
   );
