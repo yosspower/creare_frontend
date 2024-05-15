@@ -20,7 +20,9 @@ const Sidebar = () => {
       } "w-full bg-white fixed top-0 h-full shadow-2xl md:w-[35vw] lg:w-[40vw] xl:max-w-[30vw] transition-all duration-300 z-20 px-4 lg:px-[35px]"`}
     >
       <div className="flex items-center justify-between py-6 border-b">
-        <div className="uppercase text-sm font-semibold">Shopping Bag ({itemAmount})</div>
+        <div className="uppercase text-sm font-semibold">
+          Shopping Bag ({itemAmount})
+        </div>
         <div
           onClick={handleClose}
           className="cursor-poniter w-8 h-8 flex justify-center items-center"

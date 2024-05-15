@@ -6,7 +6,6 @@ const ProductProvider = ({ children }) => {
   // products state
   const [products, setProducts] = useState([]);
   // fetch products
- 
 
   return (
     <ProductContext.Provider value={{ products }}>
