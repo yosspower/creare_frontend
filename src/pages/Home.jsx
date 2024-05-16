@@ -4,7 +4,6 @@ import Product from "../components/Product";
 import Hero from "../components/Hero";
 import { useDispatch, useSelector } from "react-redux";
 import { setProducts } from "../Toolkit/productSlice";
-import TrustBadges from "../components/TrustBadges" 
 import "./home.css";
 import { getAllProducts } from "../api/products";
 const Home = () => {
@@ -42,7 +41,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <TrustBadges/>
         </div> 
   );
 };

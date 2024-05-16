@@ -5,6 +5,7 @@ import { routes } from "./routes/index.js";
 import Sidebar from "./components/Sidebar.jsx";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import TrustBadges from "./components/TrustBadges.jsx";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           ))}
         </Routes>
         <Sidebar />
+        <TrustBadges />
         <Footer />
       </Router>
     </div>

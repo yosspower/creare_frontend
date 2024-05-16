@@ -1,5 +1,4 @@
 import React from "react";
-import Header from '../components/Header';
 import mugImage from '../img/muge.jpg'; 
 import ClothingImage from '../img/clothes.jpg'; 
 import giftImage from '../img/gift.jpg'; 
@@ -9,7 +8,6 @@ import "./home.css";
 const Home = () => {
   return (
     <div>
-      <Header />
       <section className="py-40">
         <div className="container mx-auto">
           <h1 className="text-5xl font-semibold mb-10 text-center text-gray-800">
