@@ -5,9 +5,9 @@ export default function ProductCard({product}) {
   const { id, name,colors,slug, images,fullDescription, price, shortDescription } = product;
   return (
   <>
-  <div className="  w-full flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+  <div className="  w-full flex items-center justify-center bg-gray-200 ">
   {/* product card */}
-  <article className="max-w-sm w-full bg-white rounded-lg shadow-lg overflow-hidden dark:bg-gray-700">
+  <article className="max-w-sm w-full bg-white rounded-lg shadow-lg overflow-hidden">
     <div>
       <Link to={`/shop/product/${slug}`}>
     
@@ -21,9 +21,9 @@ export default function ProductCard({product}) {
     </div>
 
     <div className="flex flex-col gap-1 mt-4 px-4">
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-50">{name}</h2>
-      <span className="font-normal text-gray-600 dark:text-gray-300">{shortDescription.substring(0,30)}...</span>
-      <span className="font-semibold text-gray-800 dark:text-gray-50">$ {price}.00</span>
+      <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
+      <span className="font-normal text-gray-600 ">{shortDescription.substring(0,30)}...</span>
+      <span className="font-semibold text-gray-800 ">$ {price}.00</span>
     </div>
 
     <div className="flex gap-4 mt-4 px-4">
@@ -41,8 +41,8 @@ export default function ProductCard({product}) {
  
     </div>
 
-    <div className="mt-4 p-4 border-t border-gray-200 dark:border-gray-500">
-      <Link className="w-full flex justify-between items-center font-bold cursor-pointer hover:underline text-gray-800 dark:text-gray-50"
+    <div className="mt-4 p-4 border-t border-gray-200 ">
+      <Link className="w-full flex justify-between items-center font-bold cursor-pointer hover:underline text-gray-800 "
       to={`/shop/product/${slug}`}
       >
         <span className="text-base">Shop</span>

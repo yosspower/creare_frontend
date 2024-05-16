@@ -5,8 +5,10 @@ import { RiCheckboxCircleLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductBySlug } from "../../api/products";
 import "./product.css";
+import { SidebarContext } from "../../contexts/SidebarContext";
 
 const ProductDetailsPlaceholder = () => {
+  
   return (
     <div className="flex flex-col md:flex-row items-start gap-6 md:gap-12 w-full max-w-6xl mx-auto my-32 py-6 px-4">
       <div className="flex flex-col md:flex-row items-start gap-6 w-full">
@@ -37,7 +39,7 @@ const ProductDetailsPlaceholder = () => {
             <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
             <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
             <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
-            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>ku
             <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
             <div className="animate-pulse bg-gray-300 h-4 w-[50%]"></div>
           </div>
@@ -53,9 +55,11 @@ const ProductDetailsPlaceholder = () => {
 
 const ProductDetails = () => {
   // get the product id from url
+  const {setIsOpen } = useContext(SidebarContext);
+
   const { slug } = useParams();
   const [display , setDisplay]=useState("details");
-  const [timer,setTimer] = useState()
+
   const [displayImage, setDisplayImage] = useState("");
   const [product, setProduct] = useState({
     images: [],
@@ -77,7 +81,11 @@ const ProductDetails = () => {
     };
     getProduct();
   }, []);
+ const handleAddToCart = (product,id)=>{
+setIsOpen(true)
+  addToCart(product,id)
 
+ }
 
   // destructure product
   const { id, name, images,fullDescription, price, shortDescription } = product;
@@ -201,7 +209,7 @@ const ProductDetails = () => {
                     </>
                   ))}
               <button
-                onClick={() => addToCart(product, product.id)}
+                onClick={() =>handleAddToCart(product ,product.id)}
                 className="bg-gray-900 py-4 px-8 text-white rounded-lg"
               >
                 Add to cart

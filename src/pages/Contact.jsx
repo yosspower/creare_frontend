@@ -9,14 +9,19 @@ import { Button } from "../../public/ContactUi"
 
 export default function ContactPage() {
   return (
-    <div className='w-full flex justify-center'>
+    <div className='w-full grid gap-7 justify-center items-center py-44'>
+<div className='flex justify-center'>
+  <p className=' text-4xl font-extrabold font-primary'>Contact Us</p>
 
-    <div className='my-32 w-3/4'>
+
+
+</div>
+    <div className=' '>
    
     <Card className="">
      
       <CardHeader>
-        <CardTitle> <p className='font-primary font-bold text-2xl'>Contact Us</p></CardTitle>
+
         <div className=' font-primary font-semibold'> 
           Have a question or need help? Fill out the form below and we'll get back to you as soon as possible.
         </div> 

@@ -73,7 +73,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <TrustBadges />
     </div>
   );
 };

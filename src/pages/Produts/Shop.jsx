@@ -27,7 +27,7 @@ export default function Shop() {
 
 
     <div className="grid md:grid-cols-[240px_1fr] gap-8 px-4 md:px-6 mt-24 py-8">
-      <div className="bg-white rounded-lg shadow-sm dark:bg-gray-950 dark:border dark:border-gray-800 p-4 md:p-6">
+      <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
         <h2 className="text-3xl font-bold font-primary mb-4">Filters</h2>
         <div className="grid gap-6">
           <div>
@@ -60,7 +60,7 @@ export default function Shop() {
           
       <div className="grid gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-400" htmlFor="min-price">
+          <label className="text-sm font-medium text-gray-700" htmlFor="min-price">
             Min Price
           </label>
           <div className="relative rounded-md shadow-sm">
@@ -68,7 +68,7 @@ export default function Shop() {
               <span className="text-gray-500 sm:text-sm">$</span>
             </div>
             <input
-              className="focus:ring-primary focus:border-primary block w-full pl-7 py-3 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
+              className="focus:ring-primary focus:border-primary block w-full pl-7 py-3 pr-12 sm:text-sm border-gray-300 rounded-md "
               id="min-price"
               name="min-price"
               placeholder="0"
@@ -77,7 +77,7 @@ export default function Shop() {
           </div>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-400" htmlFor="max-price">
+          <label className="text-sm font-medium text-gray-700" htmlFor="max-price">
             Max Price
           </label>
           <div className="relative rounded-md shadow-sm">
@@ -85,7 +85,7 @@ export default function Shop() {
               <span className="text-gray-500 sm:text-sm">$</span>
             </div>
             <input
-              className="focus:ring-primary focus:border-primary py-3 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
+              className="focus:ring-primary focus:border-primary py-3 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md  "
               id="max-price"
               name="max-price"
               placeholder="1000"

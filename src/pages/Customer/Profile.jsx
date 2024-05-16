@@ -34,11 +34,11 @@ const Profile = () => {
           status: "Delivered",
         },
       ];
-      console.log(open);
+    
   return (
     <div className="container  px-2 md:px-6 py-8 h-screen  mt-24 ">
     <div className="grid md:grid-cols-2 gap-10 ">
-      <div className="bg-white dark:bg-gray-950 rounded-lg shadow-sm p-6 h-full grid gap-6">
+      <div className="bg-white rounded-lg shadow-sm p-6 h-full grid gap-6">
         <div className="flex items-center justify-between mb-4 "> 
           <h2 className="text-2xl font-bold">Customer Profile</h2>
           <Button size="meduim" type="default" >
@@ -65,7 +65,7 @@ const Profile = () => {
           
         </div>
       </div>
-      <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg p-6">
+      <div className="bg-white  rounded-lg shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Order History</h2>
           <button className="text-white px-3 py-2  bg-gray-900 hover:underline rounded-lg" onClick={()=>setOpen(true)} >
