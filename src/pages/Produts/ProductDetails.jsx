@@ -1,20 +1,68 @@
 import React, { useRef, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
-
+import { RiCheckboxCircleLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductBySlug } from "../../api/products";
 import "./product.css";
+
+const ProductDetailsPlaceholder = () => {
+  return (
+    <div className="flex flex-col md:flex-row items-start gap-6 md:gap-12 w-full max-w-6xl mx-auto my-32 py-6 px-4">
+      <div className="flex flex-col md:flex-row items-start gap-6 w-full">
+        <div className="flex-1 grid gap-4">
+          <div className="animate-pulse bg-gray-300 h-[300px] rounded-lg"></div>
+          <div className="grid gap-2">
+            <div className="animate-pulse rounded-md bg-gray-300 h-6 w-[80%]"></div>
+            <div className="animate-pulse rounded-md bg-gray-300 h-4 w-[60%]"></div>
+            <div className="animate-pulse rounded-md bg-gray-300 h-4 w-[70%]"></div>
+          </div>
+        </div>
+        <div className="flex-1 grid gap-4">
+          <div className="animate-pulse rounded-md bg-gray-300 h-8 w-[50%]"></div>
+          <div className="animate-pulse rounded-md bg-gray-300 h-6 w-[80%]"></div>
+          <div className="animate-pulse rounded-md bg-gray-300 h-4 w-[90%]"></div>
+          <div className="animate-pulse rounded-md bg-gray-300 h-4 w-[90%]"></div>
+          <div className="animate-pulse rounded-md bg-gray-300 h-10 w-[30%]"></div>
+        </div>
+      </div>
+      {/* <div className="flex flex-col md:flex-row items-start gap-6 w-full">
+        <div className="flex-1">
+          <div className="animate-pulse bg-gray-300 aspect-square rounded-lg w-full h-full"></div>
+        </div>
+        <div className="flex-1 grid gap-4">
+          <div className="animate-pulse rounded-md bg-gray-300 h-8 w-[60%]"></div>
+          <div className="animate-pulse rounded-md bg-gray-300 h-6 w-[40%]"></div>
+          <div className="flex items-center gap-2">
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 w-5 h-5 rounded-full"></div>
+            <div className="animate-pulse bg-gray-300 h-4 w-[50%]"></div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="animate-pulse rounded-md bg-gray-300 h-8 w-[20%]"></div>
+            <div className="animate-pulse bg-gray-300 h-11 rounded-md w-[30%]"></div>
+          </div>
+        </div>
+      </div> */}
+    </div>
+  );
+};
+
 const ProductDetails = () => {
   // get the product id from url
   const { slug } = useParams();
-  const carouselRef = useRef(null);
+  const [display , setDisplay]=useState("details");
+  const [timer,setTimer] = useState()
   const [displayImage, setDisplayImage] = useState("");
   const [product, setProduct] = useState({
     images: [],
     colors: [],
     variants: [],
   });
+  const [chosenProduct,setChosenProduct] = useState({})
   const { addToCart } = useContext(CartContext);
   const dispatch = useDispatch();
 
@@ -32,26 +80,25 @@ const ProductDetails = () => {
 
 
   // destructure product
-  const { id, name, images, price, shortDescription } = product;
+  const { id, name, images,fullDescription, price, shortDescription } = product;
   return (
-    <section className=" md:pt-32 pb-[400px] md:pb-12 lg:py-32 flex ">
+    displayImage ? (
+      <section className=" md:pt-32 pb-[400px] md:pb-12 lg:py-32 flex justify-center ">
       <div className="container flex justify-center">
         {/* image and text wrapper */}
-        <div className=" flex  justify-center  lg:flex-row items-center gap-10 ">
+        <div className=" flex  justify-center   items-center gap-10  ">
           {/* images */}
           <div className="flex gap-8 items-center">
             <div className="grid  max-w-sm cursor-pointer  justify-center gap-3 overflow-y-auto pr-3    " style={{ height:"500px" }}>
               {images.map((image, index) => (
                 <div
-                  className="flex justify-center relative p-3 "
+                  className="flex justify-center h-fit relative p-3 "
                   key={index}
                   onClick={() => setDisplayImage(image)}
                 >
                   {displayImage === image ? (
                     <div className="bg-black absolute inset-0 rounded-lg   opacity-50"></div>
-                  ) : (
-                    ""
-                  )}
+                  ) : "" }
                   <img src={image} className={`h-40 rounded-lg `} alt="..." />
                 </div>
               ))}
@@ -67,73 +114,120 @@ const ProductDetails = () => {
             </div>
           </div>
           {/* text */}
-          <div className="grid  gap-3 text-center w-1/2  lg:text-left">
-            <h1 className="text-[26px] font-medium mb-2 max-w-[450px] content-center  lg:mx-0">
-              {name}
-            </h1>
-            <div className="text-2xl text-red-500 font-medium mb-6">
-              $ {price}.00
-            </div>
+          <div className="grid  gap-3 text-center lg:text-left h-[520px] w-[600px] overflow-y-auto " >
+            <div>
+          <div className="flex gap-0 h-10 mb-0">
+                <button 
+                 className={`${display === "details" ? " border-b-transparent  rounded-t-lg  bg-black text-white ":""}px-5  py-1 font- font-bold`}
+                onClick={()=>setDisplay("details")}
+                >DETAILS</button>
+                <button
+                 className={`${display === "description" ? " border-b-transparent border-2 rounded-t-lg  bg-black text-white ":""} px-5  py-1 font-primary font-bold`}
+                 onClick={()=>setDisplay("description")}
+                
+                >DESCRIPTION</button>
 
-            <p className="mb-8">{shortDescription}</p>
-
-            <p
-                className="text-lg text-gray-500 dark:text-gray-400"
-                style={{ fontWeight: "bold" }}
-              >
-                COLOR
-                <div
-                  className="flex gap-3 my-4 ml-10  p-1 px-4 rounded-md  "
-                  style={{ width: "fit-content" }}
+              </div>
+            
+              </div>
+          {
+            display === "details" ? (
+              
+       <>
+        
+              <h1 className="text-[26px] font-bold font-primary uppercase mb-2 max-w-[450px]   lg:mx-0">
+                {name}
+              </h1>
+              <div className="text-2xl text-gray-900 font-extrabold mb-6">
+                $ {price}.00
+              </div>
+  
+              <p className="mb-2 font-primary font-medium text-xl ">{shortDescription}</p>
+  
+              <p
+                  className="text-lg text-gray-500 dark:text-gray-400"
+                  style={{ fontWeight: "bold" }}
                 >
-                  {product.colors.map((color, index) => (
-                    <div
-                      className="w-8 h-8 rounded-full border-2  border-cool-gray-400  "
-                      style={{ backgroundColor: color }}
-                      key={index}
-                    ></div>
-                  ))}
-                </div>
-              </p>
-              <hr />
-              {/* variants  */}
-
-              {product.variants &&
-                product.variants?.map((variant, key) => (
-                  <>
-                    <p className="mt-6" key={key}>
+             
+                  <div
+                    className="flex gap-3 my-1 ml-10  p-1 px-4 rounded-md  "
+                    style={{ width: "fit-content" }}
+                  >
+                    {product.colors.map((color, index) => (
                       <div
-                        className=" text-lg uppercase text-gray-500 "
-                        style={{ fontWeight: "bold" }}
+                        className="w-10 h-10 rounded-full  border-2 border-gray-900 flex justify-center  items-center cursor-pointer"
+                        style={{ backgroundColor: color }}
+                        key={index}
+                        onClick={()=>setChosenProduct({...chosenProduct,color})}
                       >
-                        {variant.name}
-                      </div>
+                        {
+                          chosenProduct.color === color ? <div className="w-5 h-5 rounded-full bg-black" style={{"border":"2px solid white"}}></div> : ""
+                        }
+                     
+                        </div>
+                    ))}
+                  </div>
+                </p>
+           
+                {/* variants  */}
+  
+                {product.variants &&
+                  product.variants?.map((variant, key) => (
+                    <>
+                      <p className="mt-1" key={key}>
+                        <div
+                          className=" text-lg uppercase text-gray-500 "
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {variant.name}
+                        </div>
+  
+                        <div className="flex gap-3 my-4 ml-10">
+                          {variant.values.map((value, index) => (
+                            <span
+                              id="badge-dismiss-default"
+                              key={index}
+                              className= {`${value == chosenProduct[variant.name] ? " bg-primary text-blue-100":"text-blue-800 bg-blue-100 "} inline-flex items-center px-3 py-2 me-2 text-sm font-medium rounded-2xl cursor-pointer`}
+                              onClick={()=>{
+                                console.log(chosenProduct[variant.name]);
+                                setChosenProduct({...chosenProduct,[variant.name]:value})}}
+                            >
+                              {value}
+                            </span>
+                          ))}
+                        </div>
+                      </p>
+             
+                    </>
+                  ))}
+              <button
+                onClick={() => addToCart(product, product.id)}
+                className="bg-gray-900 py-4 px-8 text-white rounded-lg"
+              >
+                Add to cart
+              </button>
+          
+       </>
+            ):(
+       <>
+       <p className="font-primary font-medium text-xl"> {fullDescription} </p>
+       </>
 
-                      <div className="flex gap-3 my-4 ml-10">
-                        {variant.values.map((value, index) => (
-                          <span
-                            id="badge-dismiss-default"
-                            key={index}
-                            className=" inline-flex items-center px-2 py-2 me-2 text-sm font-medium text-blue-800 bg-blue-100 rounded"
-                          >
-                            {value}
-                          </span>
-                        ))}
-                      </div>
-                    </p>
-                    <hr />
-                  </>
-                ))}
-            <button
-              onClick={() => addToCart(product, product.id)}
-              className="bg-primary py-4 px-8 text-white"
-            >
-              Add to cart
-            </button>
-          </div>
+            )
+          }
+         </div>
         </div>
       </div>
     </section>
+    )
+    
+: (
+  <ProductDetailsPlaceholder/>
+ 
+)
+
+     
+  
   );
 };
 

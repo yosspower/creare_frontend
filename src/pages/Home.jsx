@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Product from "../components/Product";
 import Hero from "../components/Hero";
 import { useDispatch, useSelector } from "react-redux";
+
 import { setProducts } from "../Toolkit/productSlice";
 import "./home.css";
 import { getAllProducts } from "../api/products";
