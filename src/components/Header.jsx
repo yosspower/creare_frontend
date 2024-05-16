@@ -16,7 +16,8 @@ const handleMenuClick = (e) => {
 
 const items = [
   {
-    label: "Account",
+    label:  <Link to="/customer/account">Account</Link>,
+    
     key: "1",
     icon: <UserOutlined />,
   },
@@ -67,20 +68,20 @@ const Header = () => {
          
           className="flex gap-10"
         >
-  <Link className={`font-bold text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
+  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
 
   Home
   </Link>
-  <Link className={`font-bold text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
+  <Link className={`font-bold font-primary  text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
   Shop
   </Link> 
-  <Link className="font-bold text-xl hover:text-[#00ADB5]" to={"/category"}>
+  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/categories" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/categories"}>
             Categories
           </Link>
-   <Link className={`font-bold text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
+   <Link className={`font-semibold font-primary text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
   Contact
   </Link>
-  <Link className="font-bold  text-xl" to={"/"}>
+  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/about" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/about"}>
   About us
   </Link>
         </div>

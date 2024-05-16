@@ -29,6 +29,7 @@ export const addProduct = (product) => {
 };
 
 export const getProductBySlug = (slug) => {
+  console.log(slug);
   return axiosInstance
     .get(`/products/uni/${slug}`)
     .then((res) => {

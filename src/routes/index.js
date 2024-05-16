@@ -5,13 +5,15 @@ import ProductDetails from "../pages/Produts/ProductDetails"
 import Contact from "../pages/Contact"
 import Shop from "../pages/Produts/Shop"
 import Category from "../pages/category"
+import Profile from "../pages/Customer/Profile";
+import About from "../pages/About";
 export  const routes = [
      {
         path: '/',
         component: Home
      },
      {
-        path:"/shop/product/:id",
+        path:"/shop/product/:slug",
         component:ProductDetails
      },
      {
@@ -19,11 +21,19 @@ export  const routes = [
         component:Shop
      },
      {
-      path:"/category",
+      path:"/categories",
       component:Category
+   },
+   {
+      path:"/customer/account",
+      component:Profile
    },
      {
         path:"/contact-us",
         component:Contact
-     }
+     },
+     {
+      path:"/about",
+      component:About
+   }
 ]
