@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "../contexts/SidebarContext";
 import { CartContext } from "../contexts/CartContext";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "../img/logo.svg";
+import Logo from "../img/CREARE.png";
 import { BsBag } from "react-icons/bs";
 import { IoPersonOutline } from "react-icons/io5";
 import { Dropdown, message } from "antd";
@@ -58,7 +58,7 @@ const Header = () => {
       <div className="container  mx-auto flex items-center justify-between h-full">
         {/* Logo */}
         <Link to={"/"}>
-          <div className="w-[40px]">
+          <div className="w-[150px] lg:w-[200px] ">
             <img src={Logo} alt="Logo" />
           </div>
         </Link>
