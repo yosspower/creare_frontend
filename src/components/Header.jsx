@@ -8,7 +8,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { Dropdown, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { CiLogout } from "react-icons/ci";
-import { RiMenuFold3Fill } from "react-icons/ri";
+import { CiMenuBurger } from "react-icons/ci";
 const handleMenuClick = (e) => {
   message.info("Click on menu item. ");
   console.log("click", e);
@@ -88,10 +88,12 @@ const Header = () => {
 
       {/* profile part  */}
         <div className="flex gap-5">
+       
         <div
           onClick={() => setIsOpen(!isOpen)}
           className="cursor-pointer flex relative"
         >
+          
           <BsBag className="text-2xl" />
           <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
             {itemAmount}
@@ -108,7 +110,7 @@ const Header = () => {
         </div>
     </Dropdown>
     <div className=" cursor-pointer ">
-    <RiMenuFold3Fill className="visible lg:hidden" size={32} />
+    <CiMenuBurger className="visible lg:hidden" size={32} />
     </div>
         </div>
       </div>
