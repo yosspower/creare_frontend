@@ -126,7 +126,7 @@ setIsOpen(true)
             <div>
           <div className="flex gap-0 h-10 mb-0">
                 <button 
-                 className={`${display === "details" ? " border-b-transparent  rounded-t-lg  bg-black text-white ":""}px-5  py-1 font- font-bold`}
+                 className={`${display === "details" ? " border-b-transparent  rounded-t-lg  bg-black text-white ":""}px-5  py-1 font-pr font-bold`}
                 onClick={()=>setDisplay("details")}
                 >DETAILS</button>
                 <button
