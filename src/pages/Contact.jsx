@@ -9,9 +9,9 @@ import { Button } from "../../public/ContactUi"
 
 export default function ContactPage() {
   return (
-    <div className='w-full grid gap-7 justify-center items-center py-44'>
+    <div className=' flex flex-col gap-7 justify-center items-center py-44'>
 <div className='flex justify-center'>
-  <p className=' text-4xl font-extrabold font-primary'>Contact Us</p>
+  <p className=' text-5xl font-extrabold font-primary'>Contact Us</p>
 
 
 
