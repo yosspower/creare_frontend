@@ -12,7 +12,7 @@ const Hero = () => {
             <div className="w-10 h-[2px] mr-3 bg-cyan-700"></div>Hot Trend
           </div>
           <h1 className="uppercase text-[55px] md:text-[70px] leading-[1.1] font-semibold mb-4">
-            Fresh Fashion Finds
+            You Think We Create
             <br />
             <span className="font-light">new collection</span>
           </h1>
