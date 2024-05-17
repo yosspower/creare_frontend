@@ -8,7 +8,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { Dropdown, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { CiLogout } from "react-icons/ci";
-
+import { RiMenuFold3Fill } from "react-icons/ri";
 const handleMenuClick = (e) => {
   message.info("Click on menu item. ");
   console.log("click", e);
@@ -55,7 +55,7 @@ const Header = () => {
         isActive ? "bg-[#F2F2F2] py-6 shadow-md" : "bg-none py-6"
       } fixed w-full z-10 lg:px-8 transition-all`}
     >
-      <div className="container mx-auto flex items-center justify-between h-full">
+      <div className="container  mx-auto flex items-center justify-between h-full">
         {/* Logo */}
         <Link to={"/"}>
           <div className="w-[40px]">
@@ -66,7 +66,7 @@ const Header = () => {
         {/* pages */}
         <div
          
-          className="flex gap-10"
+          className=" hidden lg:flex gap-10"
         >
   <Link className={`font-semibold font-primary text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
 
@@ -107,6 +107,9 @@ const Header = () => {
      
         </div>
     </Dropdown>
+    <div className=" cursor-pointer ">
+    <RiMenuFold3Fill className="visible lg:hidden" size={32} />
+    </div>
         </div>
       </div>
     </header>

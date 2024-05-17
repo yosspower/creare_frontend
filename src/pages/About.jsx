@@ -29,7 +29,7 @@ export default function About() {
           />
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 ">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex justify-center  ">
         <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-[550px_1fr] lg:gap-12 xl:grid-cols-[650px_1fr]">
           <img
             alt="About"
@@ -49,7 +49,7 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      <section className="w-full py-12 md:py-24 lg:py-32 flex justify-center">
         <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-[1fr_550px] lg:gap-12 xl:grid-cols-[1fr_650px]">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-primary" >What Makes Us Unique</h2>
@@ -74,7 +74,7 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 ">
+      <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 flex justify-center">
         <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-[1fr_550px] lg:gap-12 xl:grid-cols-[1fr_650px]">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-primary">What Our Customers Say</h2>

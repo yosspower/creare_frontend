@@ -26,8 +26,8 @@ export default function Shop() {
 
 
 
-    <div className="grid md:grid-cols-[240px_1fr] gap-8 px-4 md:px-6 mt-24 py-8">
-      <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+    <div className="grid relative  lg:grid-cols-[300px_1fr] md:grid-cols-[200px_1fr] gap-8 px-4 md:px-6 mt-24 py-8">
+      <div className="bg-white rounded-lg shadow-md p-4 md:p-6   lg:sticky ">
         <h2 className="text-3xl font-bold font-primary mb-4">Filters</h2>
         <div className="grid gap-6">
           <div>
@@ -108,6 +108,7 @@ export default function Shop() {
       </div>
         </div>
       </div>
+  
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <>
