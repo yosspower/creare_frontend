@@ -1,7 +1,6 @@
 import React from "react";
-import  Input  from '/public/Input.jsx'
-import  Button  from '/public/Button.jsx'
-
+import Input from "/public/Input.jsx";
+import Button from "/public/Button.jsx";
 
 function Footer() {
   return (
@@ -11,7 +10,9 @@ function Footer() {
           <a href="#" className="text-2xl font-bold mb-4">
             Creare
           </a>
-          <p className="text-gray-400 mb-4">High-quality products for your everyday needs.</p>
+          <p className="text-gray-400 mb-4">
+            High-quality products for your everyday needs.
+          </p>
           <div className="flex space-x-4">
             <a href="#" className="text-gray-400 hover:text-white">
               <FacebookIcon className="h-6 w-6" />
@@ -43,7 +44,9 @@ function Footer() {
         </div>
         <div className="flex flex-col items-start">
           <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
-          <p className="text-gray-400 mb-4">Subscribe to our newsletter for the latest updates and offers.</p>
+          <p className="text-gray-400 mb-4">
+            Subscribe to our newsletter for the latest updates and offers.
+          </p>
           <form className="flex space-x-2 w-full">
             <Input
               className="flex-1 bg-gray-800 border-none focus:ring-0"
@@ -60,7 +63,7 @@ function Footer() {
         © 2024 Creare. All rights reserved.
       </div>
     </footer>
-  )
+  );
 }
 
 function FacebookIcon(props) {
@@ -79,7 +82,7 @@ function FacebookIcon(props) {
     >
       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
     </svg>
-  )
+  );
 }
 
 function InstagramIcon(props) {
@@ -100,7 +103,7 @@ function InstagramIcon(props) {
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
     </svg>
-  )
+  );
 }
 
 function TwitterIcon(props) {
@@ -119,7 +122,7 @@ function TwitterIcon(props) {
     >
       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
     </svg>
-  )
+  );
 }
 
 export default Footer;

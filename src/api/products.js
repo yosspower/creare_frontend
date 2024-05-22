@@ -13,18 +13,36 @@ export const getAllProducts = () => {
     });
 };
 
-export const addProduct = (product) => {
+// { category, pricemin, pricemax}
+export const searchProducts = (filter, page) => {
+  const constructQueryString = (filter) => {
+    return Object.keys(filter)
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(filter[key])}`,
+      )
+      .join("&");
+  };
+  const queryFilter = constructQueryString(filter);
+  console.log("page", page);
   return axiosInstance
-    .post("/products", product)
+    .get(`/products/search?${queryFilter}&&page=${page}`)
     .then((res) => {
       return res.data.results;
     })
-    .catch((err) => {
-      if (err.response) {
-        console.log(err.response);
-        return err.response;
-      }
-      console.error(err);
+    .catch((error) => {
+      console.log(error.response);
+    });
+};
+
+export const getBestProducts = () => {
+  return axiosInstance
+    .get("/products/best")
+    .then((res) => {
+      return res.data.results;
+    })
+    .catch((error) => {
+      console.log(error.response);
     });
 };
 
@@ -38,33 +56,5 @@ export const getProductBySlug = (slug) => {
     .catch((err) => {
       console.error(err.response);
       alert("error getting product");
-    });
-};
-
-export const updateProduct = (slug, updatedProduct) => {
-  return axiosInstance
-    .put(`/products/${slug}`, updatedProduct)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      const { status } = err.response;
-      if (status == 400) {
-        alert("product does not exists");
-      } else {
-        alert("error updating product   ");
-      }
-    });
-};
-
-export const deleteProduct = (slug) => {
-  return axiosInstance
-    .delete(`/products/${slug}`)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err.response);
-      alert("Error deleting the product");
     });
 };

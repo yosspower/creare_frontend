@@ -4,6 +4,8 @@ import { routes } from "./routes/index.js";
 
 import Sidebar from "./components/Sidebar.jsx";
 import Header from "./components/Header";
+import Menu from "./components/Menu";
+
 import Footer from "./components/Footer";
 import TrustBadges from "./components/TrustBadges.jsx";
 
@@ -21,6 +23,7 @@ const App = () => {
             ></Route>
           ))}
         </Routes>
+        <Menu />
         <Sidebar />
         <TrustBadges />
         <Footer />
