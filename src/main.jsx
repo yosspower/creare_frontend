@@ -3,11 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { configureStore } from "@reduxjs/toolkit";
-import ProductProvider from "./contexts/ProductContext";
+
 import SidebarProvider from "./contexts/SidebarContext";
 import CartProvider from "./contexts/CartContext";
 import { Provider } from "react-redux";
 import productSlice from "./Toolkit/productSlice";
+import MenuProvider from "./contexts/MenuContext";
 const store = configureStore({
   reducer: {
     products: productSlice,
@@ -16,12 +17,14 @@ const store = configureStore({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <SidebarProvider>
-      <CartProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </CartProvider>
-    </SidebarProvider>
+    <MenuProvider>
+      <SidebarProvider>
+        <CartProvider>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </CartProvider>
+      </SidebarProvider>
+    </MenuProvider>
   </Provider>,
 );

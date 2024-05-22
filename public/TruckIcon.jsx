@@ -1,6 +1,5 @@
 import React from "react";
 
-
 export default function TruckIcon(props) {
   return (
     <svg
@@ -21,5 +20,5 @@ export default function TruckIcon(props) {
       <circle cx="17" cy="18" r="2" />
       <circle cx="7" cy="18" r="2" />
     </svg>
-  )
+  );
 }

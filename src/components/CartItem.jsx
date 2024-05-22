@@ -9,7 +9,7 @@ const CartItem = ({ item }) => {
   const { removeFromCart, increaseAmount, decreaseAmount } =
     useContext(CartContext);
   // destructure item
-  const { id, name, images,shortDescription,slug, price, amount } = item;
+  const { id, name, images, shortDescription, slug, price, amount } = item;
 
   return (
     <div className="flex gap-x-4 py-2 lg:px-6 border-b border-gray-200 w-full font-light text-gray-500">

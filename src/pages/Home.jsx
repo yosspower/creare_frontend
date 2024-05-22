@@ -4,29 +4,31 @@ import Product from "../components/Product";
 import Hero from "../components/Hero";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setProducts } from "../Toolkit/productSlice";
+import { setBestProducts, setProducts } from "../Toolkit/productSlice";
 import "./home.css";
-import { getAllProducts } from "../api/products";
+import { getAllProducts, getBestProducts } from "../api/products";
+import { Link } from "react-router-dom";
 const Home = () => {
   // get products from product context
   const dispatch = useDispatch();
 
-  const products = useSelector((state) => state.products.data);
+  const bestProducts = useSelector((state) => state.products.bestProducts);
 
   // get only men's and women's clothing category
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getAllProducts();
-        dispatch(setProducts(response));
+        const response = await getBestProducts();
+        if (response) {
+          dispatch(setBestProducts(response));
+        }
       } catch (err) {
         console.log(err);
       }
     };
     fetchProducts();
   }, []);
-  console.log(products);
   return (
     <div>
       <Hero />
@@ -36,13 +38,21 @@ const Home = () => {
             Explore Our Products
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:mx-8 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0">
-            {products.map((product) => {
+            {bestProducts.map((product) => {
               return <Product product={product} key={product.id} />;
             })}
           </div>
+          <div className="text-end">
+            <Link
+              className="items-center justify-center px-3 py-4 border border-transparent text-lg font-medium rounded-sm shadow-sm text-white bg-[#1F2937]    w-1/4"
+              to={`/shop`}
+            >
+              View All Products
+            </Link>
+          </div>
         </div>
       </section>
-        </div> 
+    </div>
   );
 };
 

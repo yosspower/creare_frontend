@@ -8,7 +8,8 @@ import { IoPersonOutline } from "react-icons/io5";
 import { Dropdown, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { CiLogout } from "react-icons/ci";
-import { RiMenuFold3Fill } from "react-icons/ri";
+import { CiMenuBurger } from "react-icons/ci";
+import { MenuContext } from "../contexts/MenuContext";
 const handleMenuClick = (e) => {
   message.info("Click on menu item. ");
   console.log("click", e);
@@ -16,8 +17,8 @@ const handleMenuClick = (e) => {
 
 const items = [
   {
-    label:  <Link to="/customer/account">Account</Link>,
-    
+    label: <Link to="/customer/account">Account</Link>,
+
     key: "1",
     icon: <UserOutlined />,
   },
@@ -39,8 +40,8 @@ const Header = () => {
   const [isActive, setIsActive] = useState(false);
   const location = useLocation();
   const { isOpen, setIsOpen } = useContext(SidebarContext);
+  const { isMenuOpen, setIsMenuOpen } = useContext(MenuContext);
   const { itemAmount } = useContext(CartContext);
-
 
   // event listener
   useEffect(() => {
@@ -48,7 +49,6 @@ const Header = () => {
       window.scrollY > 60 ? setIsActive(true) : setIsActive(false);
     });
   });
-
   return (
     <header
       className={`${
@@ -64,52 +64,63 @@ const Header = () => {
         </Link>
 
         {/* pages */}
-        <div
-         
-          className=" hidden lg:flex gap-10"
-        >
-  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/"}>
-
-  Home
-  </Link>
-  <Link className={`font-bold font-primary  text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/shop"}>
-  Shop
-  </Link> 
-  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/categories" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/categories"}>
+        <div className=" hidden lg:flex gap-10">
+          <Link
+            className={`font-bold  text-xl ${location.pathname === "/" ? "text-[#00ADB5]" : "text-[#1F2937]"}`}
+            to={"/"}
+          >
+            Home
+          </Link>
+          <Link
+            className={`font-bold   text-xl ${location.pathname.includes("/shop") ? "text-[#00ADB5]" : "text-[#1F2937]"}`}
+            to={"/shop"}
+          >
+            Shop
+          </Link>
+          <Link
+            className={`font-bold  text-xl ${location.pathname === "/categories" ? "text-[#00ADB5]" : "text-[#1F2937]"}`}
+            to={"/categories"}
+          >
             Categories
           </Link>
-   <Link className={`font-semibold font-primary text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"contact-us"}>
-  Contact
-  </Link>
-  <Link className={`font-semibold font-primary text-xl ${location.pathname === "/about" ? "text-[#00ADB5]" : "text-[#000]"}`} to={"/about"}>
-  About us
-  </Link>
+          <Link
+            className={`font-bold  text-xl ${location.pathname === "/contact-us" ? "text-[#00ADB5]" : "text-[#1F2937]"}`}
+            to={"contact-us"}
+          >
+            Contact
+          </Link>
+          <Link
+            className={`font-bold  text-xl ${location.pathname === "/about" ? "text-[#00ADB5]" : "text-[#1F2937]"}`}
+            to={"/about"}
+          >
+            About us
+          </Link>
         </div>
 
-      {/* profile part  */}
+        {/* profile part  */}
         <div className="flex gap-5">
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="cursor-pointer flex relative"
-        >
-          <BsBag className="text-2xl" />
-          <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
-            {itemAmount}
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="cursor-pointer flex relative"
+          >
+            <BsBag className="text-2xl" />
+            <div className="bg-red-500 absolute -right-2 -bottom-2 text-[12px] w-[18px] h-[18px] text-white rounded-full flex justify-center items-center">
+              {itemAmount}
+            </div>
           </div>
-        </div>
-        <Dropdown menu={menuProps} className="">
-
-              <div
-          className="cursor-pointer flex relative"
-        >
-          <IoPersonOutline  className="text-2xl" />
-        
-     
-        </div>
-    </Dropdown>
-    <div className=" cursor-pointer ">
-    <RiMenuFold3Fill className="visible lg:hidden" size={32} />
-    </div>
+          <Dropdown menu={menuProps} className="">
+            <div className="cursor-pointer flex relative">
+              <IoPersonOutline className="text-2xl" />
+            </div>
+          </Dropdown>
+          <div
+            className=" cursor-pointer "
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+            }}
+          >
+            <CiMenuBurger className="visible lg:hidden" size={28} />
+          </div>
         </div>
       </div>
     </header>
