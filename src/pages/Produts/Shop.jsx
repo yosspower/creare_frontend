@@ -6,6 +6,7 @@ import { Pagination } from "antd";
 import { setFilter, setPage, setProducts } from "../../Toolkit/productSlice";
 import { getAllProducts, searchProducts } from "../../api/products";
 import { getAllCategories } from "../../api/categories";
+import ProductsPlaceHolder from "./ProductsPlaceHolder";
 export default function Shop() {
   // const [filter, setFilter] = useState({
   //   category: "all",
@@ -107,6 +108,7 @@ export default function Shop() {
                     <input
                       className="focus:ring-primary focus:border-primary block w-full pl-7 py-3 pr-12 sm:text-sm border-gray-300 rounded-md "
                       onChange={handleFilterChange}
+                      value={filter.pricemin}
                       name="pricemin"
                       placeholder="0"
                       type="number"
@@ -127,6 +129,7 @@ export default function Shop() {
                     <input
                       className="focus:ring-primary focus:border-primary py-3 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md  "
                       name="pricemax"
+                      value={filter.pricemax}
                       placeholder="1000"
                       onChange={handleFilterChange}
                       type="number"
@@ -148,8 +151,13 @@ export default function Shop() {
           </div>
         </div>
         {/* filter placeholder  */}
+        <div className="">
+        <ProductsPlaceHolder/>
 
-        <div className="grid gap-10">
+
+        </div>
+        
+        {/* <div className="grid gap-10">
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6  ">
             {products.map((product, index) => (
               <ProductCard key={index} product={product} />
@@ -164,7 +172,7 @@ export default function Shop() {
               onChange={handlePageChange}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

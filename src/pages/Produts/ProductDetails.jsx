@@ -93,12 +93,17 @@ const ProductDetails = () => {
   const { name, images, fullDescription, price, shortDescription } = product;
 
   return displayImage ? (
+
     <section className=" md:pt-32 mt-32 lg:mt-10 pb-[400px] md:pb-12 lg:py-32 flex justify-center ">
+
       <div className="container flex justify-center">
+
         {/* image and text wrapper */}
         <div className="grid lg:flex  justify-center   items-center gap-10  ">
+
           {/* images */}
           <div className="flex gap-8 items-center">
+            
             <div
               className="grid  max-w-sm cursor-pointer  justify-center gap-3 overflow-y-auto pr-3    "
               style={{ height: "500px" }}
