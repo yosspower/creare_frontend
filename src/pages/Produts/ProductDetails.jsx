@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProductBySlug } from "../../api/products";
 import "./product.css";
 import { SidebarContext } from "../../contexts/SidebarContext";
+import Reviews from "../../components/ProductReviews";
 
 const ProductDetailsPlaceholder = () => {
   
@@ -91,7 +92,8 @@ setIsOpen(true)
   const { id, name, images,fullDescription, price, shortDescription } = product;
   return (
     displayImage ? (
-      <section className=" md:pt-32 mt-32 lg:mt-10 pb-[400px] md:pb-12 lg:py-32 flex justify-center ">
+      <>
+      <section className=" md:pt-32 mt-32 lg:mt-10 pb-[100px] md:pb-12 lg:py-32 flex justify-center ">
       <div className="container flex justify-center">
         {/* image and text wrapper */}
         <div className="grid lg:flex  justify-center   items-center gap-10  ">
@@ -227,11 +229,14 @@ setIsOpen(true)
         </div>
       </div>
     </section>
+    <div>
+      <Reviews />
+    </div>
+    </>
     )
-    
+
 : (
   <ProductDetailsPlaceholder/>
- 
 )
 
      

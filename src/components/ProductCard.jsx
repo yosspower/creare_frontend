@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { TiShoppingCart } from "react-icons/ti";
+
+
 export default function ProductCard({product}) {
   const { id, name,colors,slug, images,fullDescription, price, shortDescription } = product;
   return (
