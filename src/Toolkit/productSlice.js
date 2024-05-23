@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: [],
+
   bestProducts: [],
   filter: { category: "all" },
   page: 1,

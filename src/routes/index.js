@@ -7,10 +7,15 @@ import Shop from "../pages/Produts/Shop";
 import Category from "../pages/category";
 import Profile from "../pages/Customer/Profile";
 import About from "../pages/About";
+import Login from "../pages/Auth/Login";
 export const routes = [
   {
     path: "/",
     component: Home,
+  },
+  {
+    path: "/login",
+    component: Login,
   },
   {
     path: "/shop/product/:slug",
@@ -24,6 +29,7 @@ export const routes = [
     path: "/categories",
     component: Category,
   },
+  
   {
     path: "/customer/account",
     component: Profile,
