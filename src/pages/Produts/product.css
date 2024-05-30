@@ -1,12 +1,11 @@
 ::-webkit-scrollbar {
-    width: 4px;
-    
-  }
-  ::-webkit-scrollbar-track {
-    background: inherit;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background: #3a343d; 
-  }
-  /* Handle */
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: inherit;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #3a343d;
+}
+/* Handle */
