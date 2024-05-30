@@ -5,7 +5,7 @@ import { routes } from "./routes/index.js";
 import Sidebar from "./components/Sidebar.jsx";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import TrustBadges from "./components/TrustBadges.jsx";
+import TrustBadges from "./components/trustBadges.jsx";
 
 const App = () => {
   return (
