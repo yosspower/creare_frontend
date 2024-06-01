@@ -7,9 +7,7 @@ import { getProductBySlug } from "../../api/products";
 import "./product.css";
 import { SidebarContext } from "../../contexts/SidebarContext";
 import Reviews from "../../components/ProductReviews";
-import  ProductDetailsPlaceholder  from "../../components/placeholders/ProductDetailsPlaceholder";
-
-
+import ProductDetailsPlaceholder from "../../components/placeholders/ProductDetailsPlaceholder";
 
 const ProductDetails = () => {
   // get the product id from url
@@ -59,14 +57,12 @@ const ProductDetails = () => {
           {/* image and text wrapper */}
           <div className="grid lg:flex  justify-center   items-center gap-10  ">
             {/* images */}
-            <div className="flex gap-8 items-center">
-              <div
-                className="grid  max-w-sm cursor-pointer  justify-center gap-3 overflow-y-auto pr-3    "
-                style={{ height: "500px" }}
-              >
+
+            <div className=" grid  lg:flex gap-8 items-center justify-center">
+              <div className=" flex lg:grid  max-w-sm cursor-pointer  justify-center gap-3 overflow-y-auto pr-3 md:h-[500px]  overflow-x-auto   ">
                 {images.map((image, index) => (
                   <div
-                    className="flex justify-center h-fit relative p-3 "
+                    className="flex justify-center h-fit relative p-3  "
                     key={index}
                     onClick={() => setDisplayImage(image)}
                   >
@@ -90,7 +86,7 @@ const ProductDetails = () => {
               </div>
             </div>
             {/* text */}
-            <div className="grid  gap-3  lg:text-left h-[520px] w-[600px] overflow-y-auto ">
+            <div className="grid  gap-3  lg:text-left h-[520px] md:w-[600px]  ">
               <div>
                 <div className="flex gap-0 h-10 mb-0">
                   <button

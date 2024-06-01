@@ -45,7 +45,7 @@ const Menu = () => {
         </div>
       </div>
       <div className="flex flex-col p-3 pt-7 gap-y-5 h-[360px] md:h-[480px] lg:h-[420px] overflow-y-auto overflow-x-hidden ">
-        <Link to="/home" className="text-white text-lg font-bold ">
+        <Link to="/" className="text-white text-lg font-bold ">
           Home
         </Link>
         <Link to="/shop" className="text-white text-lg font-bold ">

@@ -5,29 +5,43 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../img/CREARE.png";
 import { BsBag } from "react-icons/bs";
 import { IoPersonOutline } from "react-icons/io5";
-import { Dropdown, message } from "antd";
+import { Avatar, Dropdown, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { CiLogout, CiMenuBurger } from "react-icons/ci";
 import { MenuContext } from "../contexts/MenuContext";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../Toolkit/authSlice";
+import { Button, Modal } from "antd";
 
 const Header = () => {
   const [isActive, setIsActive] = useState(false);
   const location = useLocation();
+  const profileInfo = useSelector((state) => state.auth.user);
   const { isOpen, setIsOpen } = useContext(SidebarContext);
   const { isMenuOpen, setIsMenuOpen } = useContext(MenuContext);
   const { itemAmount } = useContext(CartContext);
-  const [isAuth, setIsAuth] = useState(true);
+  const isAuth = useSelector((state) => state.auth.isAuth);
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleOk = () => {
+    dispatch(logOut());
+    setOpen(false);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleMenuClick = (e) => {
-    message.info(`Clicked on menu item ${e.key}`);
-    console.log("click", e);
+    // message.info(`Clicked on menu item ${e.key}`);
+    // console.log("click", e);
 
     if (e.key === "1") {
-      navigate("/customer/account");
+      navigate("/account");
     } else if (e.key === "2") {
-      setIsAuth(false);
-  
+      showModal();
     }
   };
 
@@ -67,7 +81,7 @@ const Header = () => {
         isActive ? "bg-[#F2F2F2] py-6 shadow-md" : "bg-none py-6"
       } fixed w-full z-10 lg:px-8 transition-all`}
     >
-      <div className="container mx-auto flex items-center justify-between h-full">
+      <div className="container md:mx-auto flex items-center justify-between h-full">
         <Link to="/">
           <div className="w-[150px] lg:w-[200px] ">
             <img src={Logo} alt="Logo" />
@@ -138,11 +152,14 @@ const Header = () => {
           {isAuth ? (
             <Dropdown menu={menuProps}>
               <div className="cursor-pointer flex relative">
-                <IoPersonOutline className="text-2xl" />
+                <Avatar size={32} src={profileInfo.avatar} />
               </div>
             </Dropdown>
           ) : (
-            <Link to="/login" className="px-4 py-2 bg-gray-800 text-white rounded-md text-pretty text-center">
+            <Link
+              to="/login"
+              className="px-4 py-2 bg-gray-800 text-white rounded-md text-pretty text-center"
+            >
               Login
             </Link>
           )}
@@ -155,6 +172,33 @@ const Header = () => {
           >
             <CiMenuBurger className="visible lg:hidden" size={28} />
           </div>
+          <Modal
+            open={open}
+            title="Log out"
+            onOk={handleOk}
+            onCancel={handleCancel}
+            okButtonProps={{
+              style: {
+                backgroundColor: "red",
+                borderColor: "red",
+                color: "white",
+              },
+            }}
+            footer={(_, { OkBtn, CancelBtn }) => (
+              <>
+                <CancelBtn />
+                <OkBtn
+                  style={{
+                    backgroundColor: "red",
+                    borderColor: "red",
+                    color: "white",
+                  }}
+                />
+              </>
+            )}
+          >
+            <p>are you sure you want to logout from your account ?!</p>
+          </Modal>
         </div>
       </div>
     </header>

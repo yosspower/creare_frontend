@@ -9,9 +9,11 @@ import CartProvider from "./contexts/CartContext";
 import { Provider } from "react-redux";
 import productSlice from "./Toolkit/productSlice";
 import MenuProvider from "./contexts/MenuContext";
+import authSlice from "./Toolkit/authSlice";
 const store = configureStore({
   reducer: {
     products: productSlice,
+    auth: authSlice,
   },
 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
