@@ -82,6 +82,15 @@ const Header = () => {
       } fixed w-full z-10 lg:px-8 transition-all`}
     >
       <div className="container md:mx-auto flex items-center justify-between h-full">
+      <div
+            className="cursor-pointer"
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+            }}
+          >
+            <CiMenuBurger className="visible lg:hidden" size={28} />
+          </div>
+          
         <Link to="/">
           <div className="w-[150px] lg:w-[200px] ">
             <img src={Logo} alt="Logo" />
@@ -164,14 +173,7 @@ const Header = () => {
             </Link>
           )}
 
-          <div
-            className="cursor-pointer"
-            onClick={() => {
-              setIsMenuOpen(!isMenuOpen);
-            }}
-          >
-            <CiMenuBurger className="visible lg:hidden" size={28} />
-          </div>
+     
           <Modal
             open={open}
             title="Log out"

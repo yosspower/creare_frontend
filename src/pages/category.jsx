@@ -1,13 +1,8 @@
 import React from "react";
-import mugImage from '../img/muge.jpg'; 
-import ClothingImage from '../img/clothes.jpg'; 
-import giftImage from '../img/gift.jpg'; 
-import TrustBadges from "../components/trustBadges.jsx";
-
 import mugImage from "../img/muge.jpg";
 import ClothingImage from "../img/clothes.jpg";
 import giftImage from "../img/gift.jpg";
-import TrustBadges from "../components/trustBadges";
+import TrustBadges from "../components/TrustBadges";
 import "./home.css";
 
 const Home = () => {

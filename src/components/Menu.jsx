@@ -29,7 +29,7 @@ const Menu = () => {
   return (
     <div
       className={`${
-        isMenuOpen && windowWidth <= 1024 ? "right-0" : "-right-full"
+        isMenuOpen && windowWidth <= 1024 ? "left-0" : "-left-full"
       } "w-full bg-[#1F2937] fixed top-0 h-full shadow-2xl w-[300px] transition-all duration-500 z-20 px-4 lg:px-[35px]"`}
     >
       <div className="flex items-center justify-between py-6 border-b">
