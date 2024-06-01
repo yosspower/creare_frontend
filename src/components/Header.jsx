@@ -83,14 +83,14 @@ const Header = () => {
     >
       <div className="container md:mx-auto flex items-center justify-between h-full">
       <div
-            className="cursor-pointer"
+            className="cursor-pointer visible lg:hidden"
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
             }}
           >
-            <CiMenuBurger className="visible lg:hidden" size={28} />
+            <CiMenuBurger className="" size={28} />
           </div>
-          
+
         <Link to="/">
           <div className="w-[150px] lg:w-[200px] ">
             <img src={Logo} alt="Logo" />
