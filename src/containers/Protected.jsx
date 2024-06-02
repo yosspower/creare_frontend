@@ -3,7 +3,7 @@ import { Navigate, Route, Router, Routes } from "react-router-dom";
 import Header from "../components/Header";
 import Menu from "../components/Menu";
 import Sidebar from "../components/Sidebar";
-import TrustBadges from "../components/TrustBadges";
+import TrustBadges from "../components/trustBadges";
 import Footer from "../components/Footer";
 import { protectedRoutes } from "../routes/protected";
 import { useSelector } from "react-redux";

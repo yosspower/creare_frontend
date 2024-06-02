@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import { routes } from "../routes";
 import Menu from "../components/Menu";
 import Sidebar from "../components/Sidebar";
-import TrustBadges from "../components/TrustBadges";
+import TrustBadges from "../components/trustBadges";
 import Footer from "../components/Footer";
 
 export default function Layout() {
