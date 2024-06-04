@@ -1,6 +1,7 @@
 import React from "react";
 import Input from "/public/Input.jsx";
 import Button from "/public/Button.jsx";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -28,18 +29,18 @@ function Footer() {
         <div className="flex flex-col items-start">
           <h4 className="text-lg font-semibold mb-4">Navigation</h4>
           <nav className="flex flex-col space-y-2">
-            <a href="#" className="text-gray-400 hover:text-white">
+            <Link to="/" className="text-gray-400 hover:text-white">
               Home
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
+            </Link>
+            <Link to="/shop" className="text-gray-400 hover:text-white">
               Shop
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
+            </Link>
+            <Link to="/about" className="text-gray-400 hover:text-white">
               About
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
+            </Link>
+            <Link to="/contact-us" className="text-gray-400 hover:text-white">
               Contact
-            </a>
+            </Link>
           </nav>
         </div>
         <div className="flex flex-col items-start">
