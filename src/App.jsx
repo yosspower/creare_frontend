@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-
-
-
-
-
 import Layout from "./containers/Layout.jsx";
 
 import Login from "./pages/Auth/Login.jsx";
@@ -15,7 +10,6 @@ import { getProfile } from "./api/auth.js";
 import { useDispatch } from "react-redux";
 import { logOut, setAuth, setUser } from "./Toolkit/authSlice.js";
 import Protected from "./containers/Protected.jsx";
-
 
 const App = () => {
   const dispatch = useDispatch();
@@ -42,6 +36,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+
           <Route path="/account*" element={<Protected />} />
           <Route path="/*" element={<Layout />} />
         </Routes>

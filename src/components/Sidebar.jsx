@@ -76,8 +76,13 @@ const Sidebar = () => {
       </div>
 
       {/* Payment Modal */}
-      <Modal isVisible={showPaymentForm} onClose={() => setShowPaymentForm(false)}>
-        <h2 className="text-3xl font-bold mb-6 text-center">Choose Payment Method</h2>
+      <Modal
+        isVisible={showPaymentForm}
+        onClose={() => setShowPaymentForm(false)}
+      >
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          Choose Payment Method
+        </h2>
         <form onSubmit={handlePaymentSubmit} className="mt-4 space-y-6">
           <div className="flex justify-around">
             <label className="flex flex-col items-center cursor-pointer transition-transform transform hover:scale-105">
@@ -89,8 +94,14 @@ const Sidebar = () => {
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="hidden"
               />
-              <div className={`flex flex-col items-center border-4 p-6 rounded-lg ${paymentMethod === 'card' ? 'border-blue-500' : 'border-gray-300'}`}>
-                <img src="/images/visa.png" alt="Card" className="w-20 h-20 mb-2" />
+              <div
+                className={`flex flex-col items-center border-4 p-6 rounded-lg ${paymentMethod === "card" ? "border-blue-500" : "border-gray-300"}`}
+              >
+                <img
+                  src="/images/visa.png"
+                  alt="Card"
+                  className="w-20 h-20 mb-2"
+                />
                 <span className="text-lg font-medium">Card</span>
               </div>
             </label>
@@ -103,8 +114,14 @@ const Sidebar = () => {
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className="hidden"
               />
-              <div className={`flex flex-col items-center border-4 p-6 rounded-lg ${paymentMethod === 'paypal' ? 'border-blue-500' : 'border-gray-300'}`}>
-                <img src="/images/paypal.png" alt="PayPal" className="w-20 h-20 mb-2" />
+              <div
+                className={`flex flex-col items-center border-4 p-6 rounded-lg ${paymentMethod === "paypal" ? "border-blue-500" : "border-gray-300"}`}
+              >
+                <img
+                  src="/images/paypal.png"
+                  alt="PayPal"
+                  className="w-20 h-20 mb-2"
+                />
                 <span className="text-lg font-medium">PayPal</span>
               </div>
             </label>
@@ -113,7 +130,9 @@ const Sidebar = () => {
           {paymentMethod === "card" && (
             <div className="space-y-4">
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">Card Number</label>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Card Number
+                </label>
                 <input
                   type="text"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -122,7 +141,9 @@ const Sidebar = () => {
               </div>
               <div className="flex space-x-4">
                 <div className="w-1/2">
-                  <label className="block mb-2 text-sm font-medium text-gray-700">Expiry Date</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    Expiry Date
+                  </label>
                   <input
                     type="text"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -131,7 +152,9 @@ const Sidebar = () => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block mb-2 text-sm font-medium text-gray-700">CVC</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                    CVC
+                  </label>
                   <input
                     type="text"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -144,7 +167,9 @@ const Sidebar = () => {
 
           {paymentMethod === "paypal" && (
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">PayPal Email</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                PayPal Email
+              </label>
               <input
                 type="email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"

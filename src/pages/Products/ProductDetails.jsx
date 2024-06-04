@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,8 @@ import "./product.css";
 import { SidebarContext } from "../../contexts/SidebarContext";
 import Reviews from "../../components/ProductReviews";
 import ProductDetailsPlaceholder from "../../components/placeholders/ProductDetailsPlaceholder";
-
+import { MdOutlineDesignServices } from "react-icons/md";
+import { FaFileAlt ,FaCartPlus } from "react-icons/fa";
 const ProductDetails = () => {
   // get the product id from url
   const { setIsOpen } = useContext(SidebarContext);
@@ -180,11 +181,21 @@ const ProductDetails = () => {
                         </p>
                       </>
                     ))}
+                  <Link
+                    to="/product/make-design"
+                    className="bg-[#00ADB5] py-3 px-8 text-white rounded-lg flex justify-center gap-3"
+                  >
+                    <MdOutlineDesignServices size={26} />
+                    <span> Start Designing </span>
+                  </Link>
                   <button
                     onClick={() => handleAddToCart(product, product.id)}
-                    className="bg-gray-900 py-4 px-8 text-white rounded-lg"
+                    className="bg-gray-900 py-4 px-8 text-white rounded-lg flex justify-center gap-3"
                   >
-                    Add to cart
+                    <FaCartPlus size={21}/>
+                   <span>
+                   Add to cart
+                    </span> 
                   </button>
                 </>
               ) : (

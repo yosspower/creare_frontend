@@ -147,10 +147,6 @@ const Home = () => {
 
 export default Home;
 
-
-
-
-
 // import React, { useState, useEffect } from "react";
 // import axios from "axios"; // Import axios for making HTTP requests
 // import TrustBadges from "../components/trustBadges.jsx";
