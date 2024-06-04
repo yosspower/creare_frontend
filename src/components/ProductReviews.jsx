@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";  // Added this line
 import avatar from "../img/user.png";
+import axiosInstance from "../api/axiosInstance";
 
 export default function Reviews({ reviews, id }) {
   const [stars, setStars] = useState(0);
   const [reviewText, setReviewText] = useState("");  // Added this line
-
+console.log(reviews);
   const renderStars = (rating) => {
     const starsArray = [];
     for (let i = 1; i <= 5; i++) {
@@ -40,23 +41,24 @@ export default function Reviews({ reviews, id }) {
 
   // Added this function
   const handleSubmit = async (event) => {
-    console.log("hhhhhhhhhhhhhhhhh");
+
     event.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:3001/products/add-review/${id}`, {
-        
-        rating: stars,  // Added this line
-        text: reviewText,
-        date: new Date().toISOString()  // assuming the server expects ISO date format
+      const response = await axiosInstance.post(`/products/add-review/${id}`, {
+        rating:stars,
+        body:  reviewText,
+
+    
       });
       console.log("Review submitted successfully", response.data);
-      // Optionally, you can reset the form or update the reviews list with the new review
+      
       setStars(0);
       setReviewText("");
     } catch (error) {
       console.error("Error submitting review", error);
     }
   };
+
 
   return (
     <>
@@ -66,28 +68,56 @@ export default function Reviews({ reviews, id }) {
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
               Add Review
             </h2>
-            {/* Added form and changed div structure to form */}
-            <form  className="flex flex-col items-center gap-4">
-              <div className="flex items-center gap-1 ">
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <StarIcon
-                    key={value}
-                    className={`${stars >= value ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer`}
-                    onClick={() => setStars(value)}
-                  />
-                ))}
+            <div className="flex items-center gap-1 ">
+              <div onClick={() => setStars(1)}>
+                <StarIcon
+                  className={`${stars >= 1 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                />
               </div>
-              <Textarea
+
+              <div onClick={() => setStars(2)}>
+                <StarIcon
+                  className={`${stars >= 2 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                />
+              </div>
+
+              <div onClick={() => setStars(3)}>
+                <StarIcon
+                  className={`${stars >= 3 ? " fill-gray-950" : ""} h-10 w-10 cursor-pointer   `}
+                />
+              </div>
+
+              <div onClick={() => setStars(4)}>
+                <StarIcon
+                  className={`${stars >= 4 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                />
+              </div>
+              <div onClick={() => setStars(5)}>
+                <StarIcon
+                  className={`${stars == 5 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                />
+              </div>
+              <div></div>
+            </div>
+          </div>
+          {/* //hhhhhhh */}
+          </div>
+          <div className="grid gap-8" />
+
+          <div className="grid gap-4 md:grid-cols-4 md:items-center">
+            <div className="flex items-center gap-2 md:col-span-4"></div>
+            <div className="flex items-center gap-2 md:col-span-4">
+            <textarea
                 className="h-40 w-full md:w-[500px] resize-none p-2 border border-gray-300 rounded"
                 id="review"
                 placeholder="Write your review..."
-                value={reviewText}  // Added this line
+              
                 onChange={(e) => setReviewText(e.target.value)}  // Added this line
-              />
+              ></textarea>
               <button type="submit" onClick={handleSubmit} className="w-[250px] h-14 text-lg text-white bg-gray-800 py-1 justify-center mx-auto">
                 Leave a Review
               </button>
-            </form>
+       
           </div>
         </div>
       </section>

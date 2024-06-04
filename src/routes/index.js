@@ -1,21 +1,17 @@
 import { lazy } from "react";
 
 import Home from "../pages/Home";
-import ProductDetails from "../pages/Produts/ProductDetails";
+import ProductDetails from "../pages/Products/ProductDetails";
 import Contact from "../pages/Contact";
-import Shop from "../pages/Produts/Shop";
-import Category from "../pages/category";
-import Profile from "../pages/Customer/Profile";
+import Shop from "../pages/Products/Shop";
+import Category from "../pages/Category/category";
 import About from "../pages/About";
-import Login from "../pages/Auth/Login";
+import Preview from "../pages/Products/Preview";
+
 export const routes = [
   {
     path: "/",
     component: Home,
-  },
-  {
-    path: "/login",
-    component: Login,
   },
   {
     path: "/shop/product/:slug",
@@ -26,13 +22,12 @@ export const routes = [
     component: Shop,
   },
   {
+    path: "/product/make-design",
+    component: Preview,
+  },
+  {
     path: "/categories",
     component: Category,
-  },
-  
-  {
-    path: "/customer/account",
-    component: Profile,
   },
   {
     path: "/contact-us",
