@@ -192,6 +192,8 @@ const ProductDetails = () => {
                     onClick={() => handleAddToCart(product, product.id)}
                     className="bg-gray-900 py-4 px-8 text-white rounded-lg flex justify-center gap-3"
                   >
+
+                    
                     <FaCartPlus size={21}/>
                    <span>
                    Add to cart

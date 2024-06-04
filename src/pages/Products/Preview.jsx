@@ -167,104 +167,67 @@ function addFontWeight(fontWeight){
     const canvasInstance = new fabric.Canvas(canvasRef.current);
     canvasInstance.globalCompositeOperation = 'destination-in';
     setCanvas(canvasInstance);
-   
-    
+
     fabric.Image.fromURL(tshirt, function(img) {
+      img.crossOrigin = 'anonymous';
       img.scaleToWidth(canvasInstance.width);
       img.scaleToHeight(canvasInstance.height);
       canvasInstance.setBackgroundImage(img, canvasInstance.renderAll.bind(canvasInstance));
     });
 
-
-
-
     // Handle object selection
     canvasInstance.on("selection:created", (e) => {
       setSelectedObject(e.selected[0]);
-  
-      if (e.selected[0]?.backgroundColor) {
-        setActiveBackground(true)
-      }else{
-        setActiveBackground(false)
-
-      }
-
+      setActiveBackground(!!e.selected[0]?.backgroundColor);
     });
 
     canvasInstance.on("selection:updated", (e) => {
       setSelectedObject(e.selected[0]);
-
-
-
-      if (!e.selected[0].backgroundColor) {
-    
-        setActiveBackground(false)
-      }else{
-
-
-        setActiveBackground(true)
-
-      }
-
-     
+      setActiveBackground(!!e.selected[0]?.backgroundColor);
     });
 
-
-    
     canvasInstance.on("selection:cleared", () => {
-
-      setActiveBackground(false)
+      setActiveBackground(false);
       setSelectedObject(null);
-
     });
 
     // Upload image functionality
-    const uploadImage =  async (event) => {
-     
-        const file = event.target.files[0];
-        if (file && file.type.startsWith("image/")) {
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("upload_preset", "lucomofx");
-          try {
-            const response = await fetch(
-              "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
-              {
-                method: "POST",
-                body: formData,
-              },
-            );
-            const data = await response.json();
-            const reader = new FileReader();
-            reader.onload = function (event) {
-              const imgObj = new Image();
-              imgObj.src = data.secure_url;
-              imgObj.onload = function () {
-                const img = new fabric.Image(imgObj);
-                img.scaleToWidth(200);
-                canvasInstance.add(img);
-              };
-            };
-            reader.readAsDataURL(event.target.files[0]);
-
-            
-
-
-          } catch (error) {
-            alert("error uploading image");
-            console.error("Error uploading image:", error);
-          }
-        } else {
-          console.error("Invalid file type. Please select an image file.");
+    const uploadImage = async (event) => {
+      const file = event.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "lucomofx");
+        try {
+          const response = await fetch(
+            "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const data = await response.json();
+          const imgObj = new Image();
+          imgObj.crossOrigin = 'anonymous';
+          imgObj.src = data.secure_url;
+          imgObj.onload = function () {
+            const img = new fabric.Image(imgObj);
+            img.scaleToWidth(200);
+            canvasInstance.add(img);
+          };
+        } catch (error) {
+          alert("error uploading image");
+          console.error("Error uploading image:", error);
         }
-   
- 
+      } else {
+        console.error("Invalid file type. Please select an image file.");
+      }
     };
 
     fileInputRef.current.addEventListener("change", uploadImage);
 
     return () => {
-      // fileInputRef.current.removeEventListener("change", uploadImage);
+   
       canvasInstance.dispose();
     };
   }, []);
