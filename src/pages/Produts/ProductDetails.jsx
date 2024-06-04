@@ -204,7 +204,7 @@ const ProductDetails = () => {
         </div>
       </section>
       <div>
-        <Reviews reviews={reviews} />
+        <Reviews id = {product.id} reviews={reviews} />
       </div>
     </>
   ) : (
