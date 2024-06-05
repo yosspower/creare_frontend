@@ -1,20 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link ,Navigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import Hero from "../components/Hero";
 import Product from "../components/Product";
-import { setBestProducts, setCategories } from "../Toolkit/productSlice";
+import { getCategoryFilter, setBestProducts, setCategories, setFilter } from "../Toolkit/productSlice";
 import { getBestProducts } from "../api/products";
 import { getAllCategories } from "../api/categories"; // Import the new API function
 import "./home.css";
 
+
 const Home = () => {
   const dispatch = useDispatch();
-
   const bestProducts = useSelector((state) => state.products.bestProducts);
   const categories = useSelector((state) => state.products.categories);
-
+  const [redirectToShop, setRedirectToShop] = useState(false);
+  const goToCategorie = (categoryId) => {
+    dispatch(getCategoryFilter(categoryId));
+    setRedirectToShop(true)
+ 
+  };
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -53,7 +58,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 max-w-sm mx-auto md:max-w-none md:mx-0">
             {categories.slice(0, 5).map((category) => {
               return (
-                <Link to={`/category/${category.id}`} key={category.id}>
+                <Link  onClick={()=>goToCategorie(category.id)} key={category.id}>
                   <div className="pb-5 bg-white shadow rounded-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
                     <img
                       src={category.image}
@@ -70,17 +75,22 @@ const Home = () => {
           </div>
           <div className="text-center mt-10 flex justify-center">
             <Link
+            to={"/categories"}
               className=" flex text-center items-center h-14 w-fit px-5 gap-3  border border-transparent text-lg font-medium rounded-md  text-white bg-[#00ADB5] hover:bg-[#248287]"
-              to={`/categories`}
+             
             >
-              <span className="">  Explore More </span>
-                
+              <span className=""> Explore More </span>
+
               <FaArrowRight size={20} />
-               
             </Link>
           </div>
         </div>
       </section>
+ {  redirectToShop && (
+     <Navigate to={`/shop`} />
+
+ )
+   }
       <section className="py-20">
         <div className="container mx-auto">
           <h1 className="text-3xl font-semibold mb-10 text-center">
@@ -97,14 +107,12 @@ const Home = () => {
               to={`/shop`}
             >
               <span className=""> All products </span>
-                
+
               <FaArrowRight size={20} />
-               
             </Link>
           </div>
         </div>
       </section>
-    
     </div>
   );
 };

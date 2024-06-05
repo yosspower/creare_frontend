@@ -22,7 +22,7 @@ export const routes = [
     component: Shop,
   },
   {
-    path: "/product/make-design",
+    path: "/:name/design",
     component: Preview,
   },
   {

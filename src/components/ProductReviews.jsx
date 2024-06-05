@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import axios from "axios";  // Added this line
+import axios from "axios"; // Added this line
 import avatar from "../img/user.png";
 import axiosInstance from "../api/axiosInstance";
 import { useSelector } from "react-redux";
 
-export default function Reviews({ reviews, id }) {
+export default function Reviews({ reviews, id, addReview }) {
   const [stars, setStars] = useState(0);
-  console.log(reviews);
-  const [reviewText, setReviewText] = useState("");  // Added this line
-const isAuth = useSelector((state =>state.auth.isAuth));
+  const [reviewText, setReviewText] = useState(""); // Added this line
+  const isAuth = useSelector((state) => state.auth.isAuth);
   const renderStars = (rating) => {
     const starsArray = [];
     for (let i = 1; i <= 5; i++) {
@@ -27,7 +26,7 @@ const isAuth = useSelector((state =>state.auth.isAuth));
           className={`w-5 h-5 ${i <= rating ? "text-black" : "text-gray-400"}`}
         >
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-        </svg>
+        </svg>,
       );
     }
     return starsArray;
@@ -43,94 +42,102 @@ const isAuth = useSelector((state =>state.auth.isAuth));
 
   // Added this function
   const handleSubmit = async (event) => {
-
     event.preventDefault();
     try {
       const response = await axiosInstance.post(`/products/add-review/${id}`, {
-        rating:stars,
-        body:  reviewText,
-
-    
+        rating: stars,
+        body: reviewText,
       });
-      console.log("Review submitted successfully", response.data);
-      
+
+      const { results } = response.data;
+
+      addReview(results);
+
       setStars(0);
       setReviewText("");
     } catch (error) {
+      if (error.response) {
+        const { results, status } = error.response.data;
+        console.log(error.response.data);
+      }
+
       console.error("Error submitting review", error);
     }
   };
 
-
   return (
     <>
-    {isAuth && (
- <section className="grid mx-auto max-w-4xl px-4 py-32 md:px-6">
- <div className="grid grid-col gap-2">
-   <div className="flex flex-col items-center gap-2">
-     <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-       Add Review
-     </h2>
-     <div className="flex items-center gap-1 ">
-       <div onClick={() => setStars(1)}>
-         <StarIcon
-           className={`${stars >= 1 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
-         />
-       </div>
+      {isAuth && (
+        <section className="grid mx-auto max-w-4xl px-4 py-32 md:px-6">
+          <div className="grid grid-col gap-2">
+            <div className="flex flex-col items-center gap-2">
+              <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
+                Add Review
+              </h2>
+              <div className="flex items-center gap-1 ">
+                <div onClick={() => setStars(1)}>
+                  <StarIcon
+                    className={`${stars >= 1 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                  />
+                </div>
 
-       <div onClick={() => setStars(2)}>
-         <StarIcon
-           className={`${stars >= 2 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
-         />
-       </div>
+                <div onClick={() => setStars(2)}>
+                  <StarIcon
+                    className={`${stars >= 2 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                  />
+                </div>
 
-       <div onClick={() => setStars(3)}>
-         <StarIcon
-           className={`${stars >= 3 ? " fill-gray-950" : ""} h-10 w-10 cursor-pointer   `}
-         />
-       </div>
+                <div onClick={() => setStars(3)}>
+                  <StarIcon
+                    className={`${stars >= 3 ? " fill-gray-950" : ""} h-10 w-10 cursor-pointer   `}
+                  />
+                </div>
 
-       <div onClick={() => setStars(4)}>
-         <StarIcon
-           className={`${stars >= 4 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
-         />
-       </div>
-       <div onClick={() => setStars(5)}>
-         <StarIcon
-           className={`${stars == 5 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
-         />
-       </div>
-       <div></div>
-     </div>
-   </div>
-   {/* //hhhhhhh */}
-   </div>
-   <div className="grid gap-8" />
+                <div onClick={() => setStars(4)}>
+                  <StarIcon
+                    className={`${stars >= 4 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                  />
+                </div>
+                <div onClick={() => setStars(5)}>
+                  <StarIcon
+                    className={`${stars == 5 ? " fill-gray-950 " : ""} h-10 w-10 cursor-pointer   `}
+                  />
+                </div>
+                <div></div>
+              </div>
+            </div>
+            {/* //hhhhhhh */}
+          </div>
+          <div className="grid gap-8" />
 
-   <div className="grid gap-4 md:grid-cols-4 md:items-center">
-     <div className="flex items-center gap-2 md:col-span-4"></div>
-     <div className="flex items-center gap-2 md:col-span-4">
-     <textarea
-         className="h-40 w-full md:w-[500px] resize-none p-2 border border-gray-300 rounded"
-         id="review"
-         placeholder="Write your review..."
-       
-         onChange={(e) => setReviewText(e.target.value)}  // Added this line
-       ></textarea>
-       <button type="submit" onClick={handleSubmit} className="w-[250px] h-14 text-lg text-white bg-gray-800 py-1 justify-center mx-auto">
-         Leave a Review
-       </button>
+          <div className="grid gap-4 md:grid-cols-4 md:items-center">
+            <div className="flex items-center gap-2 md:col-span-4"></div>
+            <div className="flex items-center gap-2 md:col-span-4">
+              <textarea
+                className="h-40 w-full md:w-[500px] resize-none p-2 border border-gray-300 rounded"
+                id="review"
+                placeholder="Write your review..."
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)} // Added this line
+              ></textarea>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="w-[250px] h-14 text-lg text-white bg-gray-800 py-1 justify-center mx-auto"
+              >
+                Leave a Review
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
-   </div>
- </div>
-</section>
-    )
-    }
-     
       <section>
         {reviews.length > 0 ? (
           <>
-            <div className="text-2xl font-bold tracking-tight md:text-3xl text-center">Reviews:</div>
+            <div className="text-2xl font-bold tracking-tight md:text-3xl text-center">
+              Reviews:
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 md:px-6 py-12">
               {reviews.map((review, indx) => (
                 <div
@@ -148,8 +155,14 @@ const isAuth = useSelector((state =>state.auth.isAuth));
                           />
                         </span>
                         <div>
-                          <h4 className="font-semibold">{review.author.firstname + " " + review.author.lastname }</h4>
-                          <p className="text-sm text-gray-500">{calculateDaysAgo(review.date)} days ago</p>
+                          <h4 className="font-semibold">
+                            {review.author.firstname +
+                              " " +
+                              review.author.lastname}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {calculateDaysAgo(review.date)} days ago
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-1 text-yellow-500">
@@ -164,7 +177,9 @@ const isAuth = useSelector((state =>state.auth.isAuth));
               ))}
             </div>
           </>
-        ) : ""}
+        ) : (
+          ""
+        )}
       </section>
     </>
   );

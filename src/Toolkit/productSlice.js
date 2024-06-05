@@ -15,21 +15,28 @@ const productsSlice = createSlice({
       state.data = action.payload;
     },
     setPage: (state, action) => {
+     
       state.page = action.payload;
     },
+    getCategoryFilter: (state, action) => {
+      
+      state.filter = {category :action.payload};
+    },
     setFilter: (state, action) => {
+      console.log(action);
       const { name, value } = action.payload;
       state.filter = { ...state.filter, [name]: value };
     },
     setBestProducts: (state, action) => {
       state.bestProducts = action.payload;
     },
-    setCategories: (state, action) => { // Add reducer to set categories
+    setCategories: (state, action) => {
+      // Add reducer to set categories
       state.categories = action.payload;
     },
     updateProductState: (state, action) => {
       const index = state.data.findIndex(
-        (product) => product.slug === action.payload.slug
+        (product) => product.slug === action.payload.slug,
       );
       if (index !== -1) {
         state.data[index] = action.payload.product;
@@ -37,7 +44,7 @@ const productsSlice = createSlice({
     },
     deleteProductState: (state, action) => {
       const index = state.data.findIndex(
-        (product) => product.slug === action.payload
+        (product) => product.slug === action.payload,
       );
       if (index !== -1) {
         state.data.splice(index, 1);
@@ -52,6 +59,7 @@ export const {
   setPage,
   updateProductState,
   setBestProducts,
+  getCategoryFilter,
   setFilter,
   setCategories, // Export the new action
 } = productsSlice.actions;

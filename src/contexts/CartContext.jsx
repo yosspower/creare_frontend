@@ -29,7 +29,7 @@ const CartProvider = ({ children }) => {
 
   // add to cart
   const addToCart = (product, id) => {
-    const newItem = { ...product, amount: 1 };
+    const newItem = { ...product, amount: product.quantity };
     // check if the item is already in the cart
     const cartItem = cart.find((item) => {
       return item.id === id;

@@ -16,18 +16,14 @@ const Product = ({ product }) => {
       <div className="border border-[#e4e4e4] h-[300px] mb-4 relative overflow-hidden group transition">
         <div className="w-full h-full flex justify-center items-center">
           {/* images */}
-          <Link
-          to={`/shop/product/${slug}`}
-          >
-          
-         
-          <div className="flex justify-center items-center">
-            <img
-              className="group-hover:scale-110 transition duration-300 w-full"
-              src={images[0]}
-              alt=""
-            />
-          </div>
+          <Link to={`/shop/product/${slug}`}>
+            <div className="flex justify-center items-center">
+              <img
+                className="group-hover:scale-110 transition duration-300 w-full"
+                src={images[0]}
+                alt=""
+              />
+            </div>
           </Link>
         </div>
         {/* buttons */}
@@ -45,7 +41,7 @@ const Product = ({ product }) => {
           </Link>
         </div> */}
       </div>
-    
+
       <div>
         <div className="tex-sm capitalize text-gray-500 mb-1">{name}</div>
         <Link to={`/shop/product/${slug}`}>
