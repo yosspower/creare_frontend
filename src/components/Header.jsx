@@ -39,7 +39,7 @@ const Header = () => {
     // console.log("click", e);
 
     if (e.key === "1") {
-      navigate("/account");
+      navigate("/cr/account");
     } else if (e.key === "2") {
       showModal();
     }

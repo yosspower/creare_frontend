@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
 
-          <Route path="/account*" element={<Protected />} />
+          <Route path="/cr*" element={<Protected />} />
           <Route path="/*" element={<Layout />} />
         </Routes>
       </div>

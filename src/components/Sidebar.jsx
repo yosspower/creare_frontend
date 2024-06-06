@@ -61,22 +61,17 @@ const Sidebar = () => {
             <FiTrash2 />
           </div>
         </div>
+  
         <Link
-          to={"/"}
-          className="bg-gray-200 flex p-3 justify-center items-center text-primary w-full font-medium"
-        >
-          View Cart
-        </Link>
-        <button
-          onClick={handleCheckoutClick}
+          to={"/cr/checkout"}
           className="bg-primary flex p-3 justify-center items-center text-white w-full font-medium"
         >
           Checkout
-        </button>
+        </Link>
       </div>
 
       {/* Payment Modal */}
-      <Modal
+      {/* <Modal
         isVisible={showPaymentForm}
         onClose={() => setShowPaymentForm(false)}
       >
@@ -185,7 +180,7 @@ const Sidebar = () => {
             Submit Payment
           </button>
         </form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

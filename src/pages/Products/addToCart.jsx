@@ -1,16 +1,35 @@
-import React ,{ useState } from 'react';
+import React ,{ useContext, useEffect, useState } from 'react';
 import { Modal, Button, Select, Input, Rate } from 'antd';
 import 'tailwindcss/tailwind.css';
+import { CartContext } from "../../contexts/CartContext";
 
 const { Option } = Select;
 
-export default function AddDesignedCart({variantsOpen,handleCancel,category}) {
-
+export default function AddDesignedCart({variantsOpen,handleCancel,category,design}) {
+  const { addToCart } = useContext(CartContext);
 const [productVariants ,setProductVariants] = useState({
+  id: generateObjectId(),
   quantity:0,
+  price:33,
+  name:`designed `,
+  image:null,
+  variants:{
+    color:"#000",
+  size:"m"
+  }
 
 })
-console.log(productVariants);
+function generateObjectId() {
+  const timestamp = (Math.floor(Date.now() / 1000)).toString(16);
+  return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
+    return (Math.random() * 16 | 0).toString(16);
+  }).toLowerCase();
+}
+
+useEffect(() => {
+  setProductVariants({...productVariants,image:design})
+
+}, [design]);
 
   return (
     <Modal
@@ -18,15 +37,13 @@ console.log(productVariants);
       visible={variantsOpen}
       onCancel={handleCancel}
       footer={[
-        <Button key="submit" type="primary">
-          Add to Cart
-        </Button>,
+        
       ]}
     >
       <div className="grid gap-6 py-4">
         <div className="flex items-start gap-4">
           <img
-            src={category.mockup}
+            src={ design ? design : category.mockup}
             alt="Product Image"
             width={100}
             height={100}
@@ -37,7 +54,7 @@ console.log(productVariants);
             <p className="text-sm text-gray-500 dark:text-gray-400">
               60% combed ringspun cotton/40% polyester jersey tee.
             </p>
-            <Rate defaultValue={3} className="text-primary" />
+    
           </div>
         </div>
         <div className="grid grid-cols-2 items-center gap-4">
@@ -45,9 +62,15 @@ console.log(productVariants);
             Quantity
           </label>
           <div className="flex items-center gap-2">
-            <Button className="h-8 w-8 flex items-center justify-center" icon={<MinusIcon />} />
+            <Button className="h-8 w-8 flex items-center justify-center" icon={<MinusIcon />} 
+            
+            onClick={(e)=>setProductVariants({...productVariants,quantity:productVariants.quantity-1})}
+            />
             <Input id="quantity" type="number" defaultValue={1} onChange={(e)=>setProductVariants({...productVariants,quantity:e.target.value})} className="w-16 text-center" value={productVariants.quantity} />
-            <Button className="h-8 w-8 flex items-center justify-center" icon={<PlusIcon />} />
+            <Button className="h-8 w-8 flex items-center justify-center" icon={<PlusIcon />} 
+            
+            onClick={(e)=>setProductVariants({...productVariants,quantity:productVariants.quantity+1})}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 items-center gap-4">
@@ -99,7 +122,11 @@ console.log(productVariants);
           </Select>
         </div>
       </div>
+      <Button key="submit" className='bg-[#00ADB5]' onClick={()=>addToCart(productVariants,productVariants.id)}>
+          Add to Cart
+        </Button>,
     </Modal>
+    
   );
 }
 

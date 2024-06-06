@@ -61,7 +61,7 @@ const ProductDetails = () => {
   // destructure product
   const { name, images, fullDescription, price, shortDescription, reviews } =
     product;
-console.log( chosenProduct);
+
   return displayImage ? (
     <>
   

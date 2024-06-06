@@ -5,17 +5,20 @@ import { saveAs } from "file-saver";
 import { FaTextHeight } from "react-icons/fa6";
 import { FaFileAlt, FaCartPlus } from "react-icons/fa";
 import { MdSaveAlt } from "react-icons/md";
-import { CartContext } from "../../contexts/CartContext";
 import { getOneCategories } from "../../api/categories";
 import { useParams } from "react-router-dom";
 import AddDesignedCart from "./addToCart";
 
 const Preview = () => {
   const [variantsOpen, setVariantsOpen] = useState(false);
-  const { addToCart } = useContext(CartContext);
+
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [mode, setMode] = useState("add-text");
+  const [compeleted,setCompleted] = useState(false);
+  const [designImage,setDesignImage] = useState(null);
+
+
   const [textInfo, setTextInfo] = useState({
     text: "hello world",
     color: "#fff",
@@ -260,33 +263,37 @@ setCategory(category)
     };
   }, [name]);
 
-  const saveToCart = async () => {
-    // canvas.renderAll();
-    // const dataURL = canvas.toDataURL({
-    //   format: 'png',
-    //   quality: 1.0
-    // });
-    // // Convert dataURL to Blob
-    // const blob = await fetch(dataURL).then(res => res.blob());
-    // const formData = new FormData();
-    // formData.append("file", blob);
-    // formData.append("upload_preset", "lucomofx");
-    // try {
-    //   const response = await fetch(
-    //     "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
-    //     {
-    //       method: "POST",
-    //       body: formData,
-    //     },
-    //   );
-    //   if (!response.ok) {
-    //     throw new Error('Error uploading image');
-    //   }
-    //   const data = await response.json();
-    // } catch (error) {
-    //   alert("Error uploading image");
-    //   console.error("Error uploading image:", error);
-    // }
+  const saveDesign = async () => {
+    canvas.renderAll();
+    const dataURL = canvas.toDataURL({
+      format: 'png',
+      quality: 1.0
+    });
+
+    // Convert dataURL to Blob
+    const blob = await fetch(dataURL).then(res => res.blob());
+    const formData = new FormData();
+    formData.append("file", blob);
+    formData.append("upload_preset", "lucomofx");
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      if (!response.ok) {
+        throw new Error('Error uploading image');
+      }
+      const data = await response.json();
+      setDesignImage(data.secure_url);
+      setCompleted(true)
+      
+    } catch (error) {
+      alert("Error uploading image");
+      console.error("Error uploading image:", error);
+    }
   };
 
   const saveAsPNG = () => {
@@ -621,13 +628,25 @@ setCategory(category)
             </div>
           </div>
           <div className="flex gap-4 h-11">
-            <button
-              className=" px-4 py-1  w-full bg-[#00ADB5] text-white rounded-md flex justify-center items-center gap-2"
-              onClick={()=>setVariantsOpen(true)}
+           {!compeleted ? (
+         < >
+          <button
+              className=" px-4 py-1  w-full bg-[#393E46] text-white rounded-md flex justify-center items-center gap-2"
+             onClick={saveDesign}
             >
-              <FaCartPlus size={20} />
-              <span>Add to cart</span>
+             
+              <span> Complete </span>
             </button>
+         </>
+           ):(
+            <button
+            className=" px-4 py-1  w-full bg-[#00ADB5] text-white rounded-md flex justify-center items-center gap-2"
+            onClick={()=>setVariantsOpen(true)}
+          >
+            <FaCartPlus size={20} />
+            <span>Add to cart</span>
+          </button>
+           )}
             <button
               className=" px-4  bg-black text-white rounded-md flex justify-center items-center gap-2"
               onClick={saveAsPNG}
@@ -638,7 +657,7 @@ setCategory(category)
           </div>
         </div>
       </div>
-      <AddDesignedCart variantsOpen={variantsOpen} handleCancel={handleCancel}  category={category} />
+      <AddDesignedCart variantsOpen={variantsOpen} handleCancel={handleCancel}  category={category} design={designImage} />
     </div>
   );
 };
