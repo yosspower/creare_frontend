@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { IoMdArrowForward } from "react-icons/io";
 import { FiTrash2 } from "react-icons/fi";
@@ -12,6 +12,7 @@ const Sidebar = () => {
   const { cart, clearCart, itemAmount, total } = useContext(CartContext);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const sidebarRef = useRef(null);
 
   const handleCheckoutClick = () => {
     setShowPaymentForm(true);
@@ -24,11 +25,30 @@ const Sidebar = () => {
     setShowPaymentForm(false);
   };
 
+  // close the sidebar when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, handleClose]);
+
   return (
     <div
+      ref={sidebarRef}
       className={`${
         isOpen ? "right-0" : "-right-full"
-      } w-full bg-white fixed top-0 h-full shadow-2xl md:w-[35vw] lg:w-[40vw] xl:max-w-[30vw] transition-all duration-300 z-20 px-4 lg:px-[35px]`}
+      } w-full bg-white fixed top-0 h-full shadow-2xl md:w-[35vw] lg:w-[40vw] xl:max-w-[30vw] transition-all duration-300 z-[100] px-4 lg:px-[35px]`}
     >
       <div className="flex items-center justify-between py-6 border-b">
         <div className="uppercase text-sm font-semibold">
@@ -61,7 +81,7 @@ const Sidebar = () => {
             <FiTrash2 />
           </div>
         </div>
-  
+
         <Link
           to={"/cr/checkout"}
           className="bg-primary flex p-3 justify-center items-center text-white w-full font-medium"

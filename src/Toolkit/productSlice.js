@@ -15,12 +15,10 @@ const productsSlice = createSlice({
       state.data = action.payload;
     },
     setPage: (state, action) => {
-     
       state.page = action.payload;
     },
     getCategoryFilter: (state, action) => {
-      
-      state.filter = {category :action.payload};
+      state.filter = { category: action.payload };
     },
     setFilter: (state, action) => {
       console.log(action);

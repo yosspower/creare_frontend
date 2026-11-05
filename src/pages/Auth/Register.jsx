@@ -24,7 +24,7 @@ const Register = () => {
     switch (status) {
       case 201:
         dispatch(setAuth());
-        localStorage.setItem("token", results);
+        localStorage.setItem("token", results.token);
         navigate("/");
         break;
       default:

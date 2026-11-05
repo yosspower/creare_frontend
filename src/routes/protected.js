@@ -5,11 +5,9 @@ export const protectedRoutes = [
   {
     path: "/account",
     component: Profile,
-
   },
   {
     path: "/checkout",
     component: Checkout,
-    
   },
 ];

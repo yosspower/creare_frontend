@@ -4,57 +4,59 @@ import axiosInstance from "./axiosInstance";
 export const getAllProducts = () => {
   return axiosInstance
     .get("/products")
-    .then((res) => {
-      return res.data.results;
-    })
+    .then((res) => res.data?.results ?? [])
     .catch((error) => {
       console.log(error.response);
-      alert("Error in fetching products");
+      return [];
     });
 };
 
 // { category, pricemin, pricemax}
 export const searchProducts = (filter, page) => {
-  const constructQueryString = (filter) => {
-    return Object.keys(filter)
-      .map(
-        (key) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(filter[key])}`,
-      )
-      .join("&");
-  };
-  const queryFilter = constructQueryString(filter);
-  console.log("page", page);
+  const queryFilter = Object.keys(filter)
+    .filter(
+      (key) =>
+        filter[key] !== "" &&
+        filter[key] != null &&
+        !(key === "category" && filter[key] === "all"),
+    )
+    .map(
+      (key) => `${encodeURIComponent(key)}=${encodeURIComponent(filter[key])}`,
+    )
+    .join("&");
+
   return axiosInstance
-    .get(`/products/search?${queryFilter}&&page=${page}`)
+    .get(`/products/search?${queryFilter}&page=${page}`)
     .then((res) => {
-      return res.data.results;
+      // the API can return either a plain array or a { count, products } object
+      const data = res.data?.results ?? res.data ?? [];
+      if (Array.isArray(data)) {
+        return { products: data, count: data.length };
+      }
+      return { products: data.products ?? [], count: data.count ?? 0 };
     })
     .catch((error) => {
       console.log(error.response);
+      return { products: [], count: 0 };
     });
 };
 
 export const getBestProducts = () => {
   return axiosInstance
     .get("/products/best")
-    .then((res) => {
-      return res.data.results;
-    })
+    .then((res) => res.data?.results ?? [])
     .catch((error) => {
       console.log(error.response);
+      return [];
     });
 };
 
 export const getProductBySlug = (slug) => {
-  console.log(slug);
   return axiosInstance
     .get(`/products/uni/${slug}`)
-    .then((res) => {
-      return res.data.results;
-    })
+    .then((res) => res.data?.results ?? null)
     .catch((err) => {
       console.error(err.response);
-      alert("error getting product");
+      return null;
     });
 };

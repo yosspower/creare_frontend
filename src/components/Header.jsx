@@ -79,7 +79,7 @@ const Header = () => {
     <header
       className={`${
         isActive ? "bg-[#F2F2F2] py-6 shadow-md" : "bg-none py-6"
-      } fixed w-full z-10 lg:px-8 transition-all`}
+      } fixed w-full z-50 lg:px-8 transition-all`}
     >
       <div className="container md:mx-auto flex items-center justify-between h-full">
         <div

@@ -9,48 +9,35 @@ const Product = ({ product }) => {
   const { addToCart } = useContext(CartContext);
 
   // destructure product
-  const { id, images, name, price, slug, shortDescription } = product;
+  const { images, name, price, slug, shortDescription, description } = product;
+  const excerpt = shortDescription ?? description ?? "";
 
   return (
-    <div>
-      <div className="border border-[#e4e4e4] h-[300px] mb-4 relative overflow-hidden group transition">
-        <div className="w-full h-full flex justify-center items-center">
+    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+      <Link to={`/shop/product/${slug}`} className="block">
+        <div className="relative h-[280px] overflow-hidden bg-gray-50">
           {/* images */}
-          <Link to={`/shop/product/${slug}`}>
-            <div className="flex justify-center items-center">
-              <img
-                className="group-hover:scale-110 transition duration-300 w-full"
-                src={images[0]}
-                alt=""
-              />
-            </div>
-          </Link>
+          <img
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            src={images?.[0]}
+            alt={name}
+          />
+          {/* subtle overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        {/* buttons */}
-        {/* <div className="absolute top-6 -right-11  group-hover:right-5 p-2 flex flex-col justify-center items-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <button onClick={() => addToCart(product, id)}>
-            <div className="flex justify-center items-center text-white w-12 h-12 bg-teal-500">
-              <BsPlus className="text-3xl" />
-            </div>
-          </button>
-          <Link
-            to={`/shop/product/${slug}`}
-            className="w-12 h-12 bg-white flex justify-center items-center text-primary drop-shadow-xl"
-          >
-            <BsEyeFill />
-          </Link>
-        </div> */}
-      </div>
+      </Link>
 
-      <div>
-        <div className="tex-sm capitalize text-gray-500 mb-1">{name}</div>
+      <div className="p-4">
+        <div className="text-xs uppercase tracking-wide text-gray-400 mb-1">
+          {name}
+        </div>
         <Link to={`/shop/product/${slug}`}>
-          <h2 className="font-semibold mb-1">
-            {shortDescription.substring(0, 30)}...
+          <h2 className="font-semibold text-gray-800 mb-2 line-clamp-1 group-hover:text-[#00ADB5] transition-colors">
+            {excerpt.slice(0, 30)}...
           </h2>
         </Link>
 
-        <h2 className="font-semibbold">${price}</h2>
+        <h2 className="font-bold text-lg text-[#00ADB5]">${price}</h2>
       </div>
     </div>
   );

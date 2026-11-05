@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 import Layout from "./containers/Layout.jsx";
 
@@ -10,6 +15,16 @@ import { getProfile } from "./api/auth.js";
 import { useDispatch } from "react-redux";
 import { logOut, setAuth, setUser } from "./Toolkit/authSlice.js";
 import Protected from "./containers/Protected.jsx";
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  return null;
+};
 
 const App = () => {
   const dispatch = useDispatch();
@@ -32,6 +47,7 @@ const App = () => {
   }, []);
   return (
     <Router>
+      <ScrollToTop />
       <div className="overflow-hidden">
         <Routes>
           <Route path="/login" element={<Login />}></Route>

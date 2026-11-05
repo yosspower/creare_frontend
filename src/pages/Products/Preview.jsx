@@ -1,509 +1,651 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
-import tshirt from "./tshirt.png";
-import { saveAs } from "file-saver";
 import { FaTextHeight } from "react-icons/fa6";
-import { FaFileAlt, FaCartPlus } from "react-icons/fa";
-import { MdSaveAlt } from "react-icons/md";
+import { FaFileAlt, FaCartPlus, FaCheck, FaTrash } from "react-icons/fa";
+import {
+  MdSaveAlt,
+  MdFlipToFront,
+  MdFlipToBack,
+  MdDeleteSweep,
+  MdCenterFocusStrong,
+  MdArrowUpward,
+  MdArrowDownward,
+} from "react-icons/md";
+import { Spin, Popconfirm, message } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
 import { getOneCategories } from "../../api/categories";
-import { useParams } from "react-router-dom";
 import AddDesignedCart from "./addToCart";
 
+const FONT_WEIGHT_OPTIONS = ["normal", "bold", "bolder", "lighter", "900"];
+
+const FONT_OPTIONS = [
+  "Roboto",
+  "Arial",
+  "Times New Roman",
+  "Helvetica",
+  "Verdana",
+  "Courier New",
+  "Georgia",
+  "Palatino",
+  "Garamond",
+  "Comic Sans MS",
+  "Trebuchet MS",
+  "Arial Black",
+  "Impact",
+  "Lucida Sans",
+  "Tahoma",
+  "Century Gothic",
+  "Lucida Console",
+  "Franklin Gothic Medium",
+  "Gill Sans",
+  "Optima",
+  "Candara",
+  "Bookman",
+  "Futura",
+  "Baskerville",
+  "Consolas",
+  "Monaco",
+  "Brush Script MT",
+  "Copperplate",
+  "Papyrus",
+  "Segoe UI",
+  "Ubuntu",
+  "PT Serif",
+  "Lato",
+  "Open Sans",
+  "Merriweather",
+  "Raleway",
+  "Droid Serif",
+  "Playfair Display",
+  "Work Sans",
+  "Nunito",
+  "Oswald",
+];
+
 const Preview = () => {
-  const [variantsOpen, setVariantsOpen] = useState(false);
+  const { name } = useParams();
+  const navigate = useNavigate();
 
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  const [variantsOpen, setVariantsOpen] = useState(false);
   const [mode, setMode] = useState("add-text");
-  const [compeleted,setCompleted] = useState(false);
-  const [designImage,setDesignImage] = useState(null);
-
-
+  const [completed, setCompleted] = useState(false);
+  const [designImage, setDesignImage] = useState(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [category, setCategory] = useState({});
+  const [canvas, setCanvas] = useState(null);
+  const [selectedObject, setSelectedObject] = useState(null);
+  const [activeBackground, setActiveBackground] = useState(false);
+  const [isFontOpen, setIsFontOpen] = useState(false);
   const [textInfo, setTextInfo] = useState({
-    text: "hello world",
-    color: "#fff",
+    text: "",
+    color: "#111827",
     font: "Roboto",
-    bgColor: "",
+    bgColor: "#ffffff",
     fontWeight: "normal",
     charSpacing: 0,
   });
-  const { name } = useParams();
-  const [category, setCategory] = useState({});
-  const [activeBackground, setActiveBackground] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [canvas, setCanvas] = useState(null);
-  const [selectedObject, setSelectedObject] = useState(null);
-  const [fontWeightOptions] = useState([
-    "normal",
-    "bold",
-    "bolder",
-    "lighter",
-    "900",
-  ]);
-  const [options] = useState([
-    "Roboto",
-    "Arial",
-    "Times New Roman",
-    "Helvetica",
-    "Verdana",
-    "Courier New",
-    "Georgia",
-    "Palatino",
-    "Garamond",
-    "Comic Sans MS",
-    "Trebuchet MS",
-    "Arial Black",
-    "Impact",
-    "Lucida Sans",
-    "Tahoma",
-    "Century Gothic",
-    "Lucida Console",
-    "Franklin Gothic Medium",
-    "Gill Sans",
-    "Optima",
-    "Candara",
-    "Bookman",
-    "Futura",
-    "Baskerville",
-    "Consolas",
-    "Monaco",
-    "Brush Script MT",
-    "Copperplate",
-    "Papyrus",
-    "Segoe UI",
-    "Ubuntu",
-    "PT Serif",
-    "Lato",
-    "Open Sans",
-    "Merriweather",
-    "Raleway",
-    "Droid Serif",
-    "Playfair Display",
-    "Work Sans",
-    "Nunito",
-    "Oswald",
-  ]);
-  const handleCancel = () => {
-    setVariantsOpen(false);
-  };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  useEffect(() => {
-    if (selectedObject && selectedObject.type === "text") {
-      if (!activeBackground) {
-        selectedObject.set("backgroundColor", "");
-      } else {
-        selectedObject.set("backgroundColor", textInfo.bgColor);
-      }
-      canvas.renderAll();
-    }
-  }, [activeBackground]);
+  const handleCancel = () => setVariantsOpen(false);
+  const toggleFontDropdown = () => setIsFontOpen((prev) => !prev);
 
   const handleOptionClick = (font) => {
-    setTextInfo({ ...textInfo, font });
-    if (selectedObject && selectedObject.type === "text") {
+    setTextInfo((prev) => ({ ...prev, font }));
+    if (selectedObject && selectedObject.type === "text" && canvas) {
       selectedObject.set("fontFamily", font);
       canvas.renderAll();
+      setSelectedObject({ ...selectedObject });
     }
-
-    setIsOpen(false);
+    setIsFontOpen(false);
   };
 
-  function handleTextChange(event) {
-    const { name, value } = event.target;
-    setTextInfo({ ...textInfo, [name]: value });
+  const handleTextChange = (event) => {
+    const { name: field, value } = event.target;
+    setTextInfo((prev) => ({ ...prev, [field]: value }));
 
-    if (selectedObject && selectedObject.type === "text") {
-      if (name === "text") {
+    if (selectedObject && selectedObject.type === "text" && canvas) {
+      if (field === "text") {
         selectedObject.set("text", value);
-      } else if (name === "color") {
+      } else if (field === "color") {
         selectedObject.set("fill", value);
-      } else if (name === "bgColor") {
+      } else if (field === "bgColor") {
         selectedObject.set("backgroundColor", value);
-      } else if (name === "charSpacing") {
-        selectedObject.set("charSpacing", value);
+      } else if (field === "charSpacing") {
+        selectedObject.set("charSpacing", Number(value));
       }
       canvas.renderAll();
     }
-  }
-  function addFontWeight(fontWeight) {
-    setTextInfo({ ...textInfo, fontWeight });
-    if (selectedObject && selectedObject.type === "text") {
+  };
+
+  const handleFontWeight = (fontWeight) => {
+    setTextInfo((prev) => ({ ...prev, fontWeight }));
+    if (selectedObject && selectedObject.type === "text" && canvas) {
       selectedObject.set("fontWeight", fontWeight);
       canvas.renderAll();
     }
-  }
-  function addText() {
-    const textObject = new fabric.Text(textInfo.text, {
-      left: 100,
-      top: 100,
-      fill: textInfo.color,
-      fontSize: 50,
+  };
 
+  const bringToFront = () => {
+    if (selectedObject && canvas) {
+      selectedObject.bringToFront();
+      canvas.renderAll();
+      message.success("Object moved to front");
+    }
+  };
+
+  const bringForward = () => {
+    if (selectedObject && canvas) {
+      selectedObject.bringForward();
+      canvas.renderAll();
+      message.success("Object moved forward");
+    }
+  };
+
+  const sendBackwards = () => {
+    if (selectedObject && canvas) {
+      selectedObject.sendBackwards();
+      // Ensure background image stays at the very back
+      const backgroundImage = canvas.backgroundImage;
+      if (backgroundImage) {
+        backgroundImage.sendToBack();
+      }
+      canvas.renderAll();
+      message.success("Object moved backwards");
+    }
+  };
+
+  const sendToBack = () => {
+    if (selectedObject && canvas) {
+      selectedObject.sendToBack();
+      const backgroundImage = canvas.backgroundImage;
+      if (backgroundImage) {
+        backgroundImage.sendToBack();
+      }
+      canvas.renderAll();
+      message.success("Object moved to back");
+    }
+  };
+
+  const centerObject = () => {
+    if (selectedObject && canvas) {
+      selectedObject.center();
+      selectedObject.setCoords();
+      canvas.renderAll();
+      message.success("Object centered");
+    }
+  };
+
+  const clearCanvas = () => {
+    if (canvas) {
+      const objects = canvas.getObjects();
+      // Remove all objects except background image
+      objects.forEach((obj) => {
+        if (obj !== canvas.backgroundImage) {
+          canvas.remove(obj);
+        }
+      });
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      setSelectedObject(null);
+      setActiveBackground(false);
+      message.success("Canvas cleared");
+    }
+  };
+
+  const handleActiveBackgroundChange = (checked) => {
+    setActiveBackground(checked);
+    if (selectedObject && selectedObject.type === "text" && canvas) {
+      selectedObject.set("backgroundColor", checked ? textInfo.bgColor : "");
+      canvas.renderAll();
+    }
+  };
+
+  const addText = () => {
+    if (!canvas || !textInfo.text.trim()) return;
+
+    // Fabric.js charSpacing is in 1/1000 of fontSize
+    const fabricCharSpacing = (Number(textInfo.charSpacing) / 40) * 1000;
+
+    const textObject = new fabric.Text(textInfo.text, {
+      left: canvas.getWidth() / 2,
+      top: canvas.getHeight() / 2,
+      originX: "center",
+      originY: "center",
+      fill: textInfo.color,
+      fontSize: 40,
       fontFamily: textInfo.font,
-      backgroundColor: "",
+      backgroundColor: activeBackground ? textInfo.bgColor : "",
       fontWeight: textInfo.fontWeight,
-      charSpacing: textInfo.charSpacing,
-      lineHeight: 2,
+      charSpacing: fabricCharSpacing,
     });
 
     canvas.add(textObject);
     canvas.setActiveObject(textObject);
+    canvas.renderAll();
     setSelectedObject(textObject);
-  }
 
-  function deleteSelectedObject() {
-    if (selectedObject) {
+    // Clear input after adding
+    setTextInfo((prev) => ({ ...prev, text: "" }));
+  };
+
+  const deleteSelectedObject = () => {
+    if (selectedObject && canvas) {
       canvas.remove(selectedObject);
+      canvas.discardActiveObject();
+      canvas.renderAll();
       setSelectedObject(null);
-    }
-  }
-
-  useEffect(() => {
-    const canvasInstance = new fabric.Canvas(canvasRef.current);
-    canvasInstance.globalCompositeOperation = "destination-in";
-    setCanvas(canvasInstance);
-
-    async function getCategory() {
-      const category = await getOneCategories(name);
-setCategory(category)
-      if (category) {
-        fabric.Image.fromURL(
-          category.mockup,
-          function (img) {
-            img.crossOrigin = "Anonymous"; // Ensure this is set
-
-            // Adjust canvas size to match the image dimensions
-            canvasInstance.setWidth(img.width);
-            canvasInstance.setHeight("500");
-
-            // Calculate the center position
-            const centerX = canvasInstance.width / 2;
-            const centerY = canvasInstance.height / 2;
-
-            // Set the position
-            img.set({
-              left: centerX - img.getScaledWidth() / 2,
-              top: centerY - img.getScaledHeight() / 2,
-              originX: "left",
-              originY: "top",
-            });
-
-            // Set the background image
-            canvasInstance.setBackgroundImage(
-              img,
-              canvasInstance.renderAll.bind(canvasInstance),
-            );
-          },
-          { crossOrigin: "Anonymous" }, // This sets the crossOrigin attribute correctly
-        );
-      }
-    }
-
-    getCategory();
-
-    // Handle object selection
-    canvasInstance.on("selection:created", (e) => {
-      setSelectedObject(e.selected[0]);
-      setActiveBackground(!!e.selected[0]?.backgroundColor);
-    });
-
-    canvasInstance.on("selection:updated", (e) => {
-      setSelectedObject(e.selected[0]);
-      setActiveBackground(!!e.selected[0]?.backgroundColor);
-    });
-
-    canvasInstance.on("selection:cleared", () => {
       setActiveBackground(false);
-      setSelectedObject(null);
+    }
+  };
+
+  // Set up the fabric canvas and load the product mockup
+  useEffect(() => {
+    const canvasInstance = new fabric.Canvas(canvasRef.current, {
+      preserveObjectStacking: true,
+      width: 500,
+      height: 600,
     });
+    setCanvas(canvasInstance);
+    setIsBackgroundLoading(true);
 
-    // Upload image functionality
-    const uploadImage = async (event) => {
-      const file = event.target.files[0];
-      if (file && file.type.startsWith("image/")) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "lucomofx");
-        try {
-          const response = await fetch(
-            "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
-            {
-              method: "POST",
-              body: formData,
-            },
-          );
-          const data = await response.json();
-          const imgObj = new Image();
-          imgObj.crossOrigin = "Anonymous";
-          imgObj.src = data.secure_url;
-          imgObj.onload = function () {
-            const img = new fabric.Image(imgObj);
+    async function loadCategory() {
+      const categoryData = await getOneCategories(name);
+      setCategory(categoryData);
 
-            // Adjust canvas size to match the image dimensions
-
-            img.scaleToWidth(200);
-            canvasInstance.add(img);
-          };
-        } catch (error) {
-          alert("error uploading image");
-          console.error("Error uploading image:", error);
-        }
-      } else {
-        console.error("Invalid file type. Please select an image file.");
+      if (!categoryData?.mockup) {
+        setIsBackgroundLoading(false);
+        message.error("This category does not support custom designs yet.");
+        navigate("/shop");
+        return;
       }
-    };
 
-    fileInputRef.current.addEventListener("change", uploadImage);
+      fabric.Image.fromURL(
+        categoryData.mockup,
+        function (img) {
+          if (!img) {
+            setIsBackgroundLoading(false);
+            return;
+          }
+
+          const canvasWidth = 500;
+          const canvasHeight = 600;
+
+          // Scale to fit canvas
+          const scale = Math.min(
+            canvasWidth / img.width,
+            canvasHeight / img.height,
+            1,
+          );
+
+          img.set({
+            scaleX: scale,
+            scaleY: scale,
+            left: canvasWidth / 2,
+            top: canvasHeight / 2,
+            originX: "center",
+            originY: "center",
+            selectable: false,
+            evented: false,
+            hoverCursor: "default",
+          });
+
+          canvasInstance.add(img);
+          img.sendToBack();
+          canvasInstance.renderAll();
+          setIsBackgroundLoading(false);
+        },
+        { crossOrigin: "Anonymous" },
+      );
+    }
+
+    loadCategory();
+
+    canvasInstance.on("selection:created", (e) => {
+      const target = e.selected?.[0] ?? null;
+      setSelectedObject(target);
+      setActiveBackground(!!target?.backgroundColor);
+    });
+    canvasInstance.on("selection:updated", (e) => {
+      const target = e.selected?.[0] ?? null;
+      setSelectedObject(target);
+      setActiveBackground(!!target?.backgroundColor);
+    });
+    canvasInstance.on("selection:cleared", () => {
+      setSelectedObject(null);
+      setActiveBackground(false);
+    });
 
     return () => {
+      canvasInstance.off();
       canvasInstance.dispose();
+      setCanvas(null);
+      setSelectedObject(null);
     };
   }, [name]);
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
 
-  const saveDesign = async () => {
-    canvas.renderAll();
-    const dataURL = canvas.toDataURL({
-      format: 'png',
-      quality: 1.0
-    });
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+    if (!canvas) return;
 
-    // Convert dataURL to Blob
-    const blob = await fetch(dataURL).then(res => res.blob());
+    setIsImageLoading(true);
     const formData = new FormData();
-    formData.append("file", blob);
+    formData.append("file", file);
     formData.append("upload_preset", "lucomofx");
+
     try {
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        },
+        { method: "POST", body: formData },
       );
-      if (!response.ok) {
-        throw new Error('Error uploading image');
-      }
+      if (!response.ok) throw new Error("Upload failed");
       const data = await response.json();
-      setDesignImage(data.secure_url);
-      setCompleted(true)
-      
+
+      const imgObj = new Image();
+      imgObj.crossOrigin = "Anonymous";
+      imgObj.src = data.secure_url;
+      imgObj.onload = () => {
+        const img = new fabric.Image(imgObj);
+        const maxWidth = canvas.getWidth() * 0.6;
+        if (img.width > maxWidth) img.scaleToWidth(maxWidth);
+        img.set({
+          left: canvas.getWidth() / 2,
+          top: canvas.getHeight() / 2,
+          originX: "center",
+          originY: "center",
+        });
+        canvas.add(img);
+        canvas.setActiveObject(img);
+        canvas.renderAll();
+        setSelectedObject(img);
+        setIsImageLoading(false);
+      };
+      imgObj.onerror = () => {
+        setIsImageLoading(false);
+        alert("Could not load the uploaded image. Please try again.");
+      };
     } catch (error) {
-      alert("Error uploading image");
       console.error("Error uploading image:", error);
+      setIsImageLoading(false);
+      alert("Error uploading image. Please try again.");
     }
+  };
+
+  const saveDesign = async () => {
+    if (!canvas) return;
+    setIsCompleting(true);
+    try {
+      canvas.discardActiveObject();
+      canvas.renderAll();
+      const dataURL = canvas.toDataURL({ format: "png", quality: 1 });
+      const blob = await (await fetch(dataURL)).blob();
+
+      const formData = new FormData();
+      formData.append("file", blob);
+      formData.append("upload_preset", "lucomofx");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dpmzuf21c/image/upload",
+        { method: "POST", body: formData },
+      );
+      if (!response.ok) throw new Error("Upload failed");
+      const data = await response.json();
+
+      setDesignImage(data.secure_url);
+      setCompleted(true);
+    } catch (error) {
+      console.error("Error saving design:", error);
+      alert("Error saving your design. Please try again.");
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
+  const handleEditAgain = () => {
+    setCompleted(false);
+    setDesignImage(null);
   };
 
   const saveAsPNG = () => {
-    if (canvas) {
-      // save as png
-      canvas.renderAll();
-      const dataURL = canvas.toDataURL({
-        format: "png",
-        quality: 1.0,
-      });
-      const link = document.createElement("a");
-      link.href = dataURL;
-      link.download = "tshirt-design.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // save as json
-      // const canvasJSON = JSON.stringify(canvas.toJSON());
-      // const blob = new Blob([canvasJSON], { type: 'application/json' });
-      // saveAs(blob, 'tshirt-design.json');
-    }
+    if (!canvas) return;
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    const dataURL = canvas.toDataURL({ format: "png", quality: 1 });
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = "creare-design.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  console.log(category);
+  const isLoadingCanvas = isBackgroundLoading || isImageLoading;
+
   return (
-    <div className="pb-12 pt-28 px-4 md:mx-20">
-      <div className="grid md:grid-cols-2 gap-24 justify-center">
-        <div className="flex flex-col gap-14 pt-20">
-          <div>
-            <h1 className="text-3xl font-bold">Design Your Own Product</h1>
-            <p className="text-[#00ADB5]  opacity-70 mt-2">
-              Upload your design or create a new one using our tools.
-            </p>
-          </div>
-          <div className="w-full flex h-12 ">
-            <div
-              className={`${mode == "add-text" && " bg-gray-100 "} cursor-pointer  shadow-md   text-center font-bold flex justify-center w-full gap-3 `}
-              onClick={() => setMode("add-text")}
-            >
-              <FaTextHeight size={22} color="#00ADB5" className="my-auto " />
-              <div className={` w-fit my-auto `}>Text</div>
+    <div className="min-h-screen bg-[#F7F7F7] px-4 pb-20 pt-28 lg:px-10">
+      <div className="container mx-auto">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+          {/* Left: tools */}
+          <div className="flex flex-col gap-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
+                Design Your Own Product
+              </h1>
+              <p className="mt-2 text-gray-500">
+                Customize the {category?.name || "product"} with your own text
+                and images.
+              </p>
             </div>
 
-            <div
-              className={`${mode == "add-image" && " bg-gray-100 "} cursor-pointer  shadow-md   text-center font-bold flex justify-center w-full gap-3 `}
-              onClick={() => setMode("add-image")}
-            >
-              <FaFileAlt size={20} color="#00ADB5" className="my-auto" />
-
-              <div className={` w-fit my-auto `}>file</div>
+            {/* Mode toggle */}
+            <div className="flex w-full rounded-xl bg-gray-100 p-1">
+              <button
+                type="button"
+                onClick={() => setMode("add-text")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-3 font-semibold transition-all ${
+                  mode === "add-text"
+                    ? "bg-white text-[#00ADB5] shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <FaTextHeight size={20} />
+                <span>Text</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("add-image")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-3 font-semibold transition-all ${
+                  mode === "add-image"
+                    ? "bg-white text-[#00ADB5] shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <FaFileAlt size={18} />
+                <span>Image</span>
+              </button>
             </div>
-          </div>
 
-          {mode === "add-text" && (
-            <div className="grid gap-9 ">
-              <div className="grid lg:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="text"
-                  >
-                    Text
+            {mode === "add-text" && (
+              <div className="grid gap-8 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                {/* Text Preview Box */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Live Preview
                   </label>
-                  <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    id="text"
-                    placeholder="Enter your text"
-                    name="text"
-                    value={selectedObject ? selectedObject.text : textInfo.text}
-                    onChange={handleTextChange}
-                  />
-                </div>
-                <div>
-                  <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    htmlFor="font"
-                  >
-                    Font
-                  </label>
-                  <button
-                    type="button"
-                    role="combobox"
-                    aria-controls="radix-:r1b:"
-                    aria-expanded={isOpen}
-                    aria-autocomplete="none"
-                    dir="ltr"
-                    data-state={isOpen ? "open" : "closed"}
-                    className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
-                    onClick={toggleDropdown}
-                  >
-                    <span style={{ pointerEvents: "none" }}>
-                      {selectedObject
-                        ? selectedObject.fontFamily
-                        : textInfo.font}
-                    </span>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-chevron-down h-4 w-4 opacity-50"
-                      aria-hidden="true"
-                    >
-                      <path d="m6 9 6 6 6-6"></path>
-                    </svg>
-                  </button>
-                  {isOpen && (
-                    <div className="absolute mt-1 w-[310px] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <ul
-                        className="max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
-                        role="listbox"
-                        aria-labelledby="listbox-label"
-                        aria-activedescendant="listbox-option-3"
+                  <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-6 transition-all">
+                    {textInfo.text.trim() ? (
+                      <span
+                        style={{
+                          fontFamily: textInfo.font,
+                          color: textInfo.color,
+                          fontWeight: textInfo.fontWeight,
+                          letterSpacing: `${textInfo.charSpacing}px`,
+                          backgroundColor: activeBackground
+                            ? textInfo.bgColor
+                            : "transparent",
+                          padding: activeBackground ? "0.1em 0.3em" : "0",
+                          borderRadius: "4px",
+                          fontSize: "40px", // Match canvas font size
+                          textAlign: "center",
+                          wordBreak: "break-word",
+                          maxWidth: "100%",
+                          display: "inline-block",
+                          lineHeight: "1.16", // Match Fabric.js default line-height
+                        }}
                       >
-                        {options.map((option, index) => (
-                          <li
-                            key={index}
-                            className={`cursor-default select-none relative py-2 pl-3 pr-9  ${
-                              selectedObject &&
-                              selectedObject.fontFamily === option
-                                ? "text-white bg-indigo-600"
-                                : "text-gray-900"
-                            }`}
-                            role="option"
-                            onClick={() => handleOptionClick(option)}
-                          >
-                            <span
-                              className={`block truncate ${selectedObject && selectedObject.fontFamily === option ? "font-semibold" : "font-normal"}`}
-                              style={{ fontFamily: option }}
-                            >
-                              {option}
-                            </span>
-                            {selectedObject &&
-                              selectedObject.fontFamily === option && (
-                                <span className="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M16.707 5.293a1 1 0 010 1.414L9 14.414l-3.707-3.707a1 1 0 011.414-1.414L9 11.586l6.293-6.293a1 1 0 011.414 0z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </span>
-                              )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                        {textInfo.text}
+                      </span>
+                    ) : (
+                      <span className="text-sm italic text-gray-400">
+                        Type something to see preview...
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex gap-4 items-center">
-                  <span className="h-fit font-bold text-md">Color:</span>
-                  <label
-                    htmlFor="color"
-                    className="h-10 w-10 border-2 font-bold rounded-md cursor-pointer"
-                    style={{
-                      backgroundColor: selectedObject
-                        ? selectedObject.fill
-                        : textInfo.color,
-                    }}
-                  ></label>
-                </div>
-                {/* backgroundColor */}
-
-                {selectedObject && (
-                  <div className="flex gap-4 items-center">
-                    <span className="h-fit font-bold text-md">
-                      Background :
-                    </span>
-                    <div>
-                      <input
-                        type="checkbox"
-                        checked={activeBackground}
-                        name="active-bg"
-                        onChange={(e) => setActiveBackground(e.target.checked)}
-                      />
-                    </div>
-
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-2">
                     <label
-                      htmlFor="bgColor"
-                      className={`${!activeBackground && "hidden"} h-10 w-10 border-2 font-bold rounded-md cursor-pointer`}
+                      htmlFor="text"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Text
+                    </label>
+                    <input
+                      id="text"
+                      name="text"
+                      placeholder="Enter your text"
+                      value={
+                        selectedObject ? selectedObject.text : textInfo.text
+                      }
+                      onChange={handleTextChange}
+                      className="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 outline-none transition focus:border-[#00ADB5] focus:ring-2 focus:ring-[#00ADB5]/20"
+                    />
+                  </div>
+
+                  <div className="relative grid gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Font
+                    </label>
+                    <button
+                      type="button"
+                      onClick={toggleFontDropdown}
+                      className="flex h-10 w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-700 transition hover:border-gray-400"
+                    >
+                      <span style={{ pointerEvents: "none" }}>
+                        {selectedObject
+                          ? selectedObject.fontFamily
+                          : textInfo.font}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`transition-transform ${isFontOpen ? "rotate-180" : ""}`}
+                      >
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+                    {isFontOpen && (
+                      <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-auto rounded-lg border border-gray-100 bg-white py-1 shadow-lg">
+                        {FONT_OPTIONS.map((option) => {
+                          const isActive =
+                            selectedObject &&
+                            selectedObject.fontFamily === option;
+                          return (
+                            <button
+                              type="button"
+                              key={option}
+                              onClick={() => handleOptionClick(option)}
+                              className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition ${
+                                isActive
+                                  ? "bg-[#00ADB5] text-white"
+                                  : "text-gray-700 hover:bg-gray-100"
+                              }`}
+                            >
+                              <span style={{ fontFamily: option }}>
+                                {option}
+                              </span>
+                              {isActive && <span>&#10003;</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-700">
+                      Color
+                    </span>
+                    <label
+                      htmlFor="color"
+                      className="h-9 w-9 cursor-pointer rounded-md border border-gray-300 shadow-sm"
                       style={{
                         backgroundColor: selectedObject
-                          ? selectedObject.backgroundColor
-                          : textInfo.bgColor,
+                          ? selectedObject.fill
+                          : textInfo.color,
                       }}
                     ></label>
                   </div>
-                )}
-              </div>
 
-              <div className="mb-6">
-                <h3 className="text-md font-medium mb-2">Letter Spacing</h3>
-                <div className="flex items-center">
+                  {selectedObject && selectedObject.type === "text" && (
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium text-gray-700">
+                        Background
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={activeBackground}
+                        onChange={(e) =>
+                          handleActiveBackgroundChange(e.target.checked)
+                        }
+                        className="h-4 w-4 accent-[#00ADB5]"
+                      />
+                      {activeBackground && (
+                        <label
+                          htmlFor="bgColor"
+                          className="h-9 w-9 cursor-pointer rounded-md border border-gray-300 shadow-sm"
+                          style={{
+                            backgroundColor: selectedObject.backgroundColor
+                              ? selectedObject.backgroundColor
+                              : textInfo.bgColor,
+                          }}
+                        ></label>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">
+                      Letter Spacing
+                    </span>
+                    <span className="text-sm text-gray-400">
+                      {selectedObject
+                        ? selectedObject.charSpacing
+                        : Number(textInfo.charSpacing)}{" "}
+                      px
+                    </span>
+                  </div>
                   <input
                     type="range"
                     name="charSpacing"
@@ -513,154 +655,252 @@ setCategory(category)
                     value={
                       selectedObject
                         ? selectedObject.charSpacing
-                        : parseFloat(textInfo.charSpacing)
+                        : Number(textInfo.charSpacing)
                     }
-                    className="  w-1/2 mr-4"
                     onChange={handleTextChange}
+                    className="w-full accent-[#00ADB5]"
                   />
-                  <span className="text-sm">
-                    {selectedObject
-                      ? selectedObject.charSpacing
-                      : parseFloat(textInfo.charSpacing)}{" "}
-                    pixels
+                </div>
+
+                <div className="grid gap-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Font Weight
                   </span>
+                  <div className="flex flex-wrap gap-2">
+                    {FONT_WEIGHT_OPTIONS.map((font) => (
+                      <button
+                        type="button"
+                        key={font}
+                        onClick={() => handleFontWeight(font)}
+                        className={`rounded-lg border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
+                          font === textInfo.fontWeight
+                            ? "border-[#00ADB5] bg-[#00ADB5] text-white shadow-md shadow-[#00ADB5]/20"
+                            : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        {font}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="">
-                <label
-                  htmlFor="fontWeight"
-                  className="text-md block font-medium mb-2"
-                >
-                  Font Weight:
-                </label>
-                <div className="">
-                  {fontWeightOptions.map((font, index) => (
-                    <button
-                      key={index}
-                      className={`${font === textInfo.fontWeight && " bg-black text-white"} px-3 py-2 mx-2 my-2   outline border  rounded-md text-sm font-bold`}
-                      onClick={() => addFontWeight(font)}
-                    >
-                      {font}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <input
-                type="color"
-                name="bgColor"
-                onChange={handleTextChange}
-                id="bgColor"
-                className="hidden"
-              />
-              <input
-                type="color"
-                name="color"
-                onChange={handleTextChange}
-                id="color"
-                className="hidden"
-              />
-              {!selectedObject && (
+
+                <input
+                  type="color"
+                  name="bgColor"
+                  onChange={handleTextChange}
+                  id="bgColor"
+                  className="hidden"
+                />
+                <input
+                  type="color"
+                  name="color"
+                  onChange={handleTextChange}
+                  id="color"
+                  className="hidden"
+                />
+
                 <button
-                  className="px-4 py-3 bg-black text-white rounded-md"
+                  type="button"
                   onClick={addText}
+                  disabled={!textInfo.text.trim()}
+                  className="w-full rounded-xl bg-[#222222] px-4 py-3 font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Add text
+                  Add Text
                 </button>
-              )}
-            </div>
-          )}
-          {mode === "add-image" && (
-            <>
-              <label
-                htmlFor="upload-design"
-                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-10 h-10 text-[#00ADB5]"
+              </div>
+            )}
+
+            {mode === "add-image" && (
+              <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                <label
+                  htmlFor="upload-design"
+                  className="flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-gray-300 p-10 text-center transition hover:border-[#00ADB5] hover:bg-[#00ADB5]/5"
                 >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Drag and drop your design or{" "}
-                  <span className="text-[#00ADB5] opacity-75 font-medium">
-                    browse files
-                  </span>
-                </p>
-              </label>
-            </>
-          )}
-          {selectedObject && (
-            <button
-              className="px-4 py-3 bg-red-500 text-white"
-              onClick={deleteSelectedObject}
-            >
-              Delete selected item
-            </button>
-          )}
-          <input
-            type="file"
-            ref={fileInputRef}
-            id="upload-design"
-            className="hidden"
-          />
-        </div>
-        <div className="flex flex-col gap-6 w-fit">
-          <div className="border rounded-lg overflow-hidden ">
-            <div className="relative w-full ">
-              <canvas ref={canvasRef} height={300} width={300}></canvas>
+                  {isImageLoading ? (
+                    <>
+                      <Spin size="large" />
+                      <p className="text-sm text-gray-500">
+                        Uploading your image...
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-10 w-10 text-[#00ADB5]"
+                      >
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                      </svg>
+                      <p className="text-gray-500">
+                        Drag and drop your design or{" "}
+                        <span className="font-medium text-[#00ADB5]">
+                          browse files
+                        </span>
+                      </p>
+                      <p className="text-xs text-gray-400">PNG, JPG or SVG</p>
+                    </>
+                  )}
+                </label>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              {selectedObject && (
+                <div className="flex flex-wrap gap-2 rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={bringForward}
+                    title="Bring Forward"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition hover:bg-gray-50 hover:text-[#00ADB5]"
+                  >
+                    <MdArrowUpward size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={sendBackwards}
+                    title="Send Backward"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition hover:bg-gray-50 hover:text-[#00ADB5]"
+                  >
+                    <MdArrowDownward size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={centerObject}
+                    title="Center Object"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition hover:bg-gray-50 hover:text-[#00ADB5]"
+                  >
+                    <MdCenterFocusStrong size={20} />
+                  </button>
+                  <div className="mx-1 w-px bg-gray-200" />
+                  <button
+                    type="button"
+                    onClick={deleteSelectedObject}
+                    title="Delete Selected"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-red-100 bg-red-50 text-red-500 transition hover:bg-red-100"
+                  >
+                    <FaTrash size={16} />
+                  </button>
+                </div>
+              )}
+
+              <Popconfirm
+                title="Clear canvas"
+                description="Are you sure you want to clear all design elements?"
+                onConfirm={clearCanvas}
+                okText="Yes"
+                cancelText="No"
+              >
+                <button
+                  type="button"
+                  className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 hover:text-red-500"
+                >
+                  <MdDeleteSweep size={20} />
+                  <span>Clear All</span>
+                </button>
+              </Popconfirm>
             </div>
-            <div className="p-4 bg-gray-100 dark:bg-gray-800">
-              <h3 className="text-lg font-bold">Preview Your Design</h3>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">
-                See how your design will look on
-              </p>
-            </div>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              id="upload-design"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </div>
-          <div className="flex gap-4 h-11">
-           {!compeleted ? (
-         < >
-          <button
-              className=" px-4 py-1  w-full bg-[#393E46] text-white rounded-md flex justify-center items-center gap-2"
-             onClick={saveDesign}
-            >
-             
-              <span> Complete </span>
-            </button>
-         </>
-           ):(
-            <button
-            className=" px-4 py-1  w-full bg-[#00ADB5] text-white rounded-md flex justify-center items-center gap-2"
-            onClick={()=>setVariantsOpen(true)}
-          >
-            <FaCartPlus size={20} />
-            <span>Add to cart</span>
-          </button>
-           )}
-            <button
-              className=" px-4  bg-black text-white rounded-md flex justify-center items-center gap-2"
-              onClick={saveAsPNG}
-            >
-              <MdSaveAlt size={20} />
-              <span>Save</span>
-            </button>
+
+          {/* Right: preview */}
+          <div className="flex h-fit flex-col gap-6 lg:sticky lg:top-28">
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+              <div className="relative flex min-h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#F7F7F7]">
+                <canvas ref={canvasRef} />
+                {isLoadingCanvas && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white/70">
+                    <Spin size="large" />
+                    <span className="text-sm font-medium text-gray-600">
+                      {isBackgroundLoading
+                        ? "Loading canvas..."
+                        : "Uploading your image..."}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="border-t border-gray-100 p-5">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Preview Your Design
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  See how your design will look on the{" "}
+                  {category?.name || "product"}.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {!completed ? (
+                <button
+                  type="button"
+                  onClick={saveDesign}
+                  disabled={isCompleting || !canvas || isBackgroundLoading}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#222222] px-5 py-3 font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isCompleting ? <Spin size="small" /> : <FaCheck size={18} />}
+                  <span>
+                    {isCompleting ? "Completing..." : "Complete Design"}
+                  </span>
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setVariantsOpen(true)}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#00ADB5] px-5 py-3 font-medium text-white transition hover:bg-[#248287]"
+                  >
+                    <FaCartPlus size={18} />
+                    <span>Add to Cart</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEditAgain}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-5 py-3 font-medium text-gray-700 transition hover:bg-gray-100"
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
+              <button
+                type="button"
+                onClick={saveAsPNG}
+                disabled={!canvas}
+                className="flex items-center justify-center gap-2 rounded-xl border border-gray-300 px-5 py-3 font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <MdSaveAlt size={18} />
+                <span>Save</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <AddDesignedCart variantsOpen={variantsOpen} handleCancel={handleCancel}  category={category} design={designImage} />
+
+      <AddDesignedCart
+        variantsOpen={variantsOpen}
+        handleCancel={handleCancel}
+        category={category}
+        design={designImage}
+      />
     </div>
   );
 };
 
 export default Preview;
-``;

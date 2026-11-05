@@ -2,16 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { TiShoppingCart } from "react-icons/ti";
 export default function ProductCard({ product }) {
-  const {
-    id,
-    name,
-    colors,
-    slug,
-    images,
-    fullDescription,
-    price,
-    shortDescription,
-  } = product;
+  const { name, colors, slug, images, price, shortDescription, description } =
+    product;
+  const excerpt = shortDescription ?? description ?? "";
+  const colorList = colors ?? [];
   return (
     <>
       <div className="  w-full flex items-center justify-center bg-gray-200 ">
@@ -21,8 +15,8 @@ export default function ProductCard({ product }) {
             <Link to={`/shop/product/${slug}`}>
               <img
                 className="object-cover h-[350px] w-full  group-hover:scale-110 transition duration-300"
-                src={images[0]}
-                alt="Converse sneakers"
+                src={images?.[0]}
+                alt={name}
               />
             </Link>
           </div>
@@ -30,14 +24,14 @@ export default function ProductCard({ product }) {
           <div className="flex flex-col gap-1 mt-4 px-4">
             <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
             <span className="font-normal text-gray-600 ">
-              {shortDescription.substring(0, 30)}...
+              {excerpt.slice(0, 30)}...
             </span>
             <span className="font-semibold text-gray-800 ">$ {price}.00</span>
           </div>
 
           <div className="flex gap-4 mt-4 px-4">
             <span className="sr-only">Colors available</span>
-            {colors.map((color, index) => (
+            {colorList.map((color, index) => (
               <div
                 className="p-1 border border-gray-200 rounded-full cursor-pointer "
                 key={index}

@@ -10,7 +10,7 @@ import ProductsPlaceHolder from "../../components/placeholders/ProductsPlaceHold
 import FilterSidebarPlaceholder from "../../components/placeholders/FilterSidebarPlaceholder";
 export default function Shop() {
   const [categories, setCategories] = useState([]);
-  const [resultsCount, setResultsCount] = useState([]);
+  const [resultsCount, setResultsCount] = useState(0);
   const products = useSelector((state) => state.products.data);
   const { filter, page } = useSelector((state) => state.products);
 
@@ -19,12 +19,15 @@ export default function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const products = await searchProducts(filter, page);
-        const categories = await getAllCategories();
+        const { products: productsList, count } = await searchProducts(
+          filter,
+          page,
+        );
+        const categoriesList = await getAllCategories();
 
-        setCategories(categories);
-        setResultsCount(products.count);
-        dispatch(setProducts(products.products));
+        setCategories(categoriesList);
+        setResultsCount(count);
+        dispatch(setProducts(productsList));
       } catch (err) {
         console.log(err);
       }
@@ -38,17 +41,20 @@ export default function Shop() {
 
   const applyFilter = async () => {
     dispatch(setPage(1));
-    const response = await searchProducts(filter, page);
-    dispatch(setProducts(response.products));
-    setResultsCount(response.count);
+    const { products: productsList, count } = await searchProducts(filter, 1);
+    dispatch(setProducts(productsList));
+    setResultsCount(count);
   };
 
-  const handlePageChange = async (page) => {
-    const response = await searchProducts(filter, page);
+  const handlePageChange = async (nextPage) => {
+    const { products: productsList, count } = await searchProducts(
+      filter,
+      nextPage,
+    );
 
-    dispatch(setPage(page));
-    dispatch(setProducts(response.products));
-    setResultsCount(response.count);
+    dispatch(setPage(nextPage));
+    dispatch(setProducts(productsList));
+    setResultsCount(count);
   };
 
   return (
@@ -155,8 +161,8 @@ export default function Shop() {
         )}
 
         {/* filter placeholder  */}
-        {products ? (
-          products.length == 0 ? (
+        {Array.isArray(products) ? (
+          products.length === 0 ? (
             <>
               <div class="flex flex-col gap-8">
                 <div class="flex flex-col items-center justify-center gap-4 py-24">
@@ -189,8 +195,8 @@ export default function Shop() {
           ) : (
             <div className="grid gap-10">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6  ">
-                {products.map((product, index) => (
-                  <ProductCard key={index} product={product} />
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
               <div className="flex justify-center lg:text-end w-auto">

@@ -29,7 +29,7 @@ const Login = () => {
         alert("Server Error");
         break;
       default:
-        localStorage.setItem("token", results);
+        localStorage.setItem("token", results.token);
         dispatch(setAuth());
         navigate("/");
         window.location.reload();

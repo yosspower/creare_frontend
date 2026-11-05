@@ -10,7 +10,7 @@ import Reviews from "../../components/ProductReviews";
 import ProductDetailsPlaceholder from "../../components/placeholders/ProductDetailsPlaceholder";
 import { MdOutlineDesignServices } from "react-icons/md";
 
-import { FaPlus,FaMinus , FaCartPlus } from "react-icons/fa";
+import { FaPlus, FaMinus, FaCartPlus } from "react-icons/fa";
 import AddDesignedCart from "./addToCart";
 const ProductDetails = () => {
   // get the product id from url
@@ -27,10 +27,10 @@ const ProductDetails = () => {
   });
 
   const [chosenProduct, setChosenProduct] = useState({
-    variants:{
-      color:""
+    variants: {
+      color: "",
     },
-    quantity:1
+    quantity: 1,
   });
 
   const { addToCart } = useContext(CartContext);
@@ -47,8 +47,14 @@ const ProductDetails = () => {
         setProduct(results);
         setDisplayImage(results.images[0]);
 
-        setChosenProduct({...chosenProduct,slug:results.slug ,image:results.images[0],name:results.name,id:results.id,price:results.price})
-
+        setChosenProduct({
+          ...chosenProduct,
+          slug: results.slug,
+          image: results.images[0],
+          name: results.name,
+          id: results.id,
+          price: results.price,
+        });
       }
     };
     getProduct();
@@ -64,7 +70,6 @@ const ProductDetails = () => {
 
   return displayImage ? (
     <>
-  
       <section className=" md:pt-32 mt-32 lg:mt-10 pb-[400px] md:pb-12 lg:py-32 flex justify-center ">
         <div className="container flex justify-center">
           {/* image and text wrapper */}
@@ -98,7 +103,7 @@ const ProductDetails = () => {
                 />
               </div>
             </div>
-          
+
             {/* text */}
             <div className="grid  gap-3  lg:text-left h-[520px] md:w-[600px]  ">
               <div>
@@ -123,49 +128,56 @@ const ProductDetails = () => {
                     {name}
                   </h1>
                   <div className="flex gap-5 justify-between">
-
-                
-                  <div className="text-2xl text-gray-900 font-extrabold mb-6">
-                    $ {price}.00
+                    <div className="text-2xl text-gray-900 font-extrabold mb-6">
+                      $ {price}.00
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <label
+                        className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
+                        htmlFor="quantity"
+                      >
+                        Quantity
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-8 h-8"
+                          onClick={() =>
+                            setChosenProduct({
+                              ...chosenProduct,
+                              quantity: chosenProduct.quantity - 1,
+                            })
+                          }
+                        >
+                          <FaMinus size={15} />
+                          <span className="sr-only">Decrement</span>
+                        </button>
+                        <input
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          id="quantity"
+                          type="number"
+                          value={chosenProduct.quantity}
+                          onChange={(e) =>
+                            setChosenProduct({
+                              ...chosenProduct,
+                              quantity: e.target.value,
+                            })
+                          }
+                        />
+                        <button
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-8 h-8"
+                          onClick={() =>
+                            setChosenProduct({
+                              ...chosenProduct,
+                              quantity: chosenProduct.quantity + 1,
+                            })
+                          }
+                        >
+                          <FaPlus size={15} />
+                          <span className="sr-only">Imcrement</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex gap-2 items-center">
-
-                  <label
-    className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base"
-    htmlFor="quantity"
-  >
-    Quantity
-  </label>
-  <div className="flex items-center gap-2">
-    <button
-      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-8 h-8"
-   onClick={()=>setChosenProduct({...chosenProduct,quantity:chosenProduct.quantity-1})}
-  >
-   <FaMinus size={15} />
-      <span className="sr-only">Decrement</span>
-    </button>
-    <input
-      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      id="quantity"
-      type="number"
-      value={chosenProduct.quantity}
-      onChange={(e)=>setChosenProduct({...chosenProduct,quantity:e.target.value})}
-    />
-        <button
-      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground w-8 h-8"
-      onClick={()=>setChosenProduct({...chosenProduct,quantity:chosenProduct.quantity+1})}
-   >
-  <FaPlus size={15} />
-      <span className="sr-only">Imcrement</span>
-    </button>
-  </div>
-
-
-
-
-</div>
-
-</div>
                   <p className="mb-2 font-primary font-medium text-xl ">
                     {shortDescription}
                   </p>
@@ -184,7 +196,10 @@ const ProductDetails = () => {
                           style={{ backgroundColor: color }}
                           key={index}
                           onClick={() =>
-                            setChosenProduct({ ...chosenProduct,variants:{...chosenProduct.variants,color}  })
+                            setChosenProduct({
+                              ...chosenProduct,
+                              variants: { ...chosenProduct.variants, color },
+                            })
                           }
                         >
                           {chosenProduct.variants.color === color ? (
@@ -220,11 +235,12 @@ const ProductDetails = () => {
                                 key={index}
                                 className={`${value == chosenProduct.variants[variant.name] ? " bg-primary text-blue-100" : "text-blue-800 bg-blue-100 "} inline-flex items-center px-3 py-2 me-2 text-sm font-medium rounded-2xl cursor-pointer`}
                                 onClick={() => {
-                                 
                                   setChosenProduct({
                                     ...chosenProduct,
-                                    variants:{...chosenProduct.variants,[variant.name]: value},
-                                    
+                                    variants: {
+                                      ...chosenProduct.variants,
+                                      [variant.name]: value,
+                                    },
                                   });
                                 }}
                               >
@@ -235,13 +251,15 @@ const ProductDetails = () => {
                         </p>
                       </>
                     ))}
-                  <Link
-                    to={`/${product.category.name}/design`}
-                    className="bg-[#00ADB5] py-3 px-8 text-white rounded-lg flex justify-center gap-3"
-                  >
-                    <MdOutlineDesignServices size={26} />
-                    <span> Start Designing </span>
-                  </Link>
+                  {product.category?.mockup && (
+                    <Link
+                      to={`/${product.category?.name}/design`}
+                      className="bg-[#00ADB5] py-3 px-8 text-white rounded-lg flex justify-center gap-3"
+                    >
+                      <MdOutlineDesignServices size={26} />
+                      <span> Start Designing </span>
+                    </Link>
+                  )}
                   <button
                     onClick={() => handleAddToCart(product, product.id)}
                     className="bg-gray-900 py-4 px-8 text-white rounded-lg flex justify-center gap-3"

@@ -3,22 +3,19 @@ import axiosInstance from "./axiosInstance";
 export const getAllCategories = () => {
   return axiosInstance
     .get("/categories")
-    .then((res) => {
-      return res.data.results;
-    })
+    .then((res) => res.data?.results ?? [])
     .catch((error) => {
       console.log(error.response);
-      alert("Error in fetching products");
+      return [];
     });
 };
+
 export const getOneCategories = (category) => {
   return axiosInstance
-    .get(`/categories/uni/${category}`)
-    .then((res) => {
-      return res.data.results;
-    })
+    .get(`/categories/uni/${encodeURIComponent(category)}`)
+    .then((res) => res.data?.results ?? null)
     .catch((error) => {
       console.log(error);
-      alert("Error in fetching category");
+      return null;
     });
 };
